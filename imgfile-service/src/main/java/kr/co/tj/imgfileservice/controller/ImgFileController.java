@@ -44,6 +44,7 @@ public class ImgFileController {
 			byte[] filedata = file.getBytes();
 			ImgFileDTO dto = new ImgFileDTO(null, filename, filedata);
 			dto = imgFileService.uploadImg(dto);
+			map.put("result", dto.getId());
 			return ResponseEntity.ok().body(map);
 
 		} catch (IOException e) {
