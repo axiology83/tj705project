@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import kr.co.tj.userservice.jpa.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,9 +29,11 @@ public class UserDTO implements Serializable {
 	private Date createAt;
 
 	private Date updateAt;
-
-	private List<OrderResponse> orderList;
-
+	
+	private String token;
+	
+	
+	
 	public UserDTO toUserDTO(UserEntity userEntity) {
 		this.username = userEntity.getUsername();
 		this.name = userEntity.getName();
@@ -51,7 +54,7 @@ public class UserDTO implements Serializable {
 
 	public UserResponse toUserResponse() {
 		return UserResponse.builder().username(username).name(name).createAt(createAt).updateAt(updateAt)
-				.orderList(orderList).build();
+				.build();
 	}
 
 }

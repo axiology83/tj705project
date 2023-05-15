@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -27,7 +26,7 @@ public class UserResponse implements Serializable {
 	private Date createAt;
 
 	private Date updateAt;
-
-	private List<OrderResponse> orderList;
+	
+	private String token;
 
 }

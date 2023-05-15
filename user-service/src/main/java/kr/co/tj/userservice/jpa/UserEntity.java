@@ -1,4 +1,4 @@
-package kr.co.tj.userservice.dto;
+package kr.co.tj.userservice.jpa;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,10 +13,10 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor

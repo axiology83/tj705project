@@ -1,11 +1,11 @@
 package kr.co.tj.userservice.jpa;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
-import kr.co.tj.userservice.dto.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<UserEntity, String>{
 
-	UserEntity findByUsername(String username);
+	Optional<UserEntity> findByUsername(String username);
 
 }

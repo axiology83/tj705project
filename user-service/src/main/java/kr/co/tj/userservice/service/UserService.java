@@ -2,54 +2,67 @@ package kr.co.tj.userservice.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.tj.userservice.dto.OrderResponse;
+import kr.co.tj.userservice.DataNotFoundException;
 import kr.co.tj.userservice.dto.UserDTO;
-import kr.co.tj.userservice.dto.UserEntity;
-import kr.co.tj.userservice.dto.UserRequest;
-import kr.co.tj.userservice.feign.OrderFeign;
+import kr.co.tj.userservice.jpa.UserEntity;
 import kr.co.tj.userservice.jpa.UserRepository;
+import kr.co.tj.userservice.sec.TokenProvider;
 
 @Service
 public class UserService {
 
-	@Autowired
+
 	private UserRepository userRepository;
-
+	private BCryptPasswordEncoder passwordEncoder;
+	private TokenProvider tokenProvider;
+	
 	@Autowired
-	private OrderFeign orderFeign;
-
-	// 주문목록 불러오기(임의)
-	public UserDTO getOrders(String username) {
-
-		UserEntity userEntity = userRepository.findByUsername(username);
-
-		if (userEntity == null) {
-			throw new RuntimeException("존재하지 않는 사용입니다.");
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.tokenProvider = tokenProvider;
+	}
+	
+	
+	public UserDTO login(UserDTO userDTO) {
+		Optional<UserEntity> optional = userRepository.findByUsername(userDTO.getUsername());
+		
+		if(!optional.isPresent()) {
+			return null;
+		} 
+		
+		UserEntity entity = optional.get();
+		
+		if(!passwordEncoder.matches(userDTO.getPassword(), entity.getPassword())){
+			return null;
 		}
-
-		UserDTO userDTO = new UserDTO();
-		userDTO = userDTO.toUserDTO(userEntity);
-
-		// 서비스간의 통신: feign 이용해서 통신한 코드
-		List<OrderResponse> orderList = orderFeign.getOrdersByUsername(username);
-
-		userDTO.setOrderList(orderList);
-
+		
+		
+		String token = tokenProvider.create(entity);
+		userDTO.setToken(token);
+		userDTO.setPassword("");
 		return userDTO;
+		
 	}
 
+	
 	// 회원가입
+	@Transactional
 	public UserDTO createUser(UserDTO userDTO) {
 		userDTO = getDate(userDTO);
+		
+		String encPassword = passwordEncoder.encode(userDTO.getPassword());
+		userDTO.setPassword(encPassword);
 
 		UserEntity userEntity = userDTO.toUserEntity();
-
 		userEntity = userRepository.save(userEntity);
 
 		return userDTO.toUserDTO(userEntity);
@@ -57,43 +70,40 @@ public class UserService {
 
 	// 수정
 	@Transactional
-	public UserRequest updateUser(String username, UserRequest userRequest) {
-		UserEntity userEntity = userRepository.findByUsername(username);
-
-		// 입력한 기존 비밀번호(orgPassword)와 저장된 비밀번호(userEntity.getPassword())를 비교합니다
-		if (userRequest.getOrgPassword().equals(userEntity.getPassword())) {
-			// 새로운 비밀번호와 비밀번호 확인 값이 일치하는지 확인합니다
-			if (userRequest.getPassword().equals(userRequest.getPassword2())) {
-				userEntity.setName(userRequest.getName());
-				userEntity.setPassword(userRequest.getPassword());
-				userRepository.save(userEntity);
-				return userRequest;
-			} else {
-				// 비밀번호와 비밀번호 확인 값이 일치하지 않을 경우 예외 처리 또는 오류 메시지를 반환할 수 있습니다.
-				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-			}
-		} else {
-			// 기존 비밀번호가 올바르지 않을 경우 예외 처리 또는 오류 메시지를 반환할 수 있습니다.
-			throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
-		}
+	public UserDTO updateUser(UserDTO userDTO) {
+		Date date = new Date();
+	
+		UserDTO orgDTO = getUser(userDTO.getUsername());		
+				
+			UserEntity entity = UserEntity.builder()
+					.id(orgDTO.getId())
+					.username(orgDTO.getUsername())
+					.password(userDTO.getPassword())
+					.name(userDTO.getName())
+					.createAt(orgDTO.getCreateAt())
+					.updateAt(date)
+					.build();
+			
+			
+			entity = userRepository.save(entity);
+			orgDTO.toUserDTO(entity);
+			
+			return orgDTO;
+				
 	}
 
-	// 비밀번호 가져오기
-	public String getUserPassword(String username) {
-		UserEntity userEntity = userRepository.findByUsername(username);
-		if (userEntity != null) {
-			return userEntity.getPassword();
-		} else {
-			throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
-		}
-	}
 
 	// 삭제
 	@Transactional
 	public void deleteUser(String username) {
-		UserEntity userEntity = userRepository.findByUsername(username);
-
-		userRepository.delete(userEntity);
+		Optional<UserEntity> optional = userRepository.findByUsername(username);
+		if(!optional.isPresent()) {
+			throw new DataNotFoundException("사용자를 찾을 수 없습니다");
+		}
+		
+		UserEntity entity = optional.get();
+		userRepository.delete(entity);
+		
 	}
 
 	// 목록
@@ -107,9 +117,15 @@ public class UserService {
 	// 상세보기
 	@Transactional
 	public UserDTO getUser(String username) {
-		UserEntity userEntity = userRepository.findByUsername(username);
+		 Optional<UserEntity> optional = userRepository.findByUsername(username);
+		 
+		 if(!optional.isPresent()) {
+			 throw new DataNotFoundException("사용자 정보를 찾을 수 없음");
+		 }
+		 
+		 UserEntity entity = optional.get();
 
-		return new UserDTO().toUserDTO(userEntity);
+		return new UserDTO().toUserDTO(entity);
 	}
 
 	// 날짜정보 주입

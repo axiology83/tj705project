@@ -25,21 +25,17 @@ import kr.co.tj.userservice.service.UserService;
 @RequestMapping("/user-service")
 public class UserController {
 
-	@Autowired
+	
 	private Environment env;
-
-	@Autowired
 	private UserService userService;
-
-	// username의 주문목록 가져오기(임의)
-	@GetMapping("/user/{username}/orders")
-	public ResponseEntity<?> getOrders(@PathVariable("username") String username) {
-		UserDTO userDTO = userService.getOrders(username);
-
-		UserResponse userResponse = userDTO.toUserResponse();
-
-		return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+	
+	@Autowired
+	public UserController(Environment env, UserService userService) {
+		this.env = env;
+		this.userService = userService;
 	}
+
+	
 
 	// 회원가입
 	@PostMapping("/users")
@@ -71,29 +67,29 @@ public class UserController {
 	}
 
 	// 수정
-	@PutMapping("/users/{username}")
-	public ResponseEntity<?> updateUser(@PathVariable("username") String username,
-			@RequestBody UserRequest userRequest) {
-		try {
-			if (userRequest.getOrgPassword() == null
-					|| !userRequest.getOrgPassword().equals(userService.getUserPassword(username))) {
-				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
-			}
-
-			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
-				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-			}
-
-			userRequest = userService.updateUser(username, userRequest);
-			return ResponseEntity.status(HttpStatus.OK).body(userRequest);
-			
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
-	}
+//	@PutMapping("/users")
+//	public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+//		String org
+//	
+//			if (userRequest.getOrgPassword() == null
+//					|| !userRequest.getOrgPassword().equals(userService.getUser(userRequest.getUsername()).getPassword())) {
+//				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
+//			}
+//
+//			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
+//				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
+//			}
+//
+//			userRequest = userService.updateUser(userRequest);
+//			return ResponseEntity.status(HttpStatus.OK).body(userRequest);
+//			
+//		
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//		
+//	}
 
 	// 삭제
-	@DeleteMapping("/users/{username}")
+	@DeleteMapping("/users")
 	public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
 		userService.deleteUser(username);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -103,6 +99,13 @@ public class UserController {
 	@GetMapping("/health_check")
 	public String status() {
 		return "user service입니다" + env.getProperty("local.server.port");
+	}
+	
+	
+	
+	@PostMapping("/testinsert")
+	public void testinsert() {
+		
 	}
 
 }
