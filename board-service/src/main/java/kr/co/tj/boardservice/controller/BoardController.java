@@ -61,7 +61,7 @@ public class BoardController {
 				map.put("result", "삭제 실패");
 				return ResponseEntity.badRequest().body(map);
 			}
-		}
+		} 
 	
 	
 	// 검색기능
@@ -108,7 +108,7 @@ public class BoardController {
 		
 	} 
 	// 삭제
-	@DeleteMapping("/delete")
+	@DeleteMapping("")
 	public ResponseEntity<?> delete(@RequestBody BoardRequest request) {
 		
 		try {
