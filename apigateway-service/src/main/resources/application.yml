@@ -8,23 +8,62 @@ spring:
   cloud:
     gateway:
       routes:
+        #홍구님 보드 서비스
       - id: board-service
         uri: lb://BOARD-SERVICE
         predicates:
         - Path=/board-service/** #유저가 브라우저 주소창에 http://localhost:8000/user-service/users 입력 user-service를 보고 id를 확인하고 uri로 넘어감
         - Method=GET, POST, PUT, DELETE
         
+        #홍구님 카테고리서비스
       - id: category-service #순서 2번
         uri: lb://CATEGORY-SERVICE #순서 3번
         predicates:
         - Path=/category-service/** #순서 1번   
         - Method=GET, POST, PUT, DELETE
         
-    #  - id: order-service #순서 2번
-     #   uri: lb://ORDER-SERVICE #순서 3번
-      #  predicates:
-       # - Path=/order-service/** #순서 1번   
-        #- Method=GET, POST, PUT, DELETE
+        # 정호님 리뷰서비스
+      - id: review-service 
+        uri: lb://REVIEW-SERVICE 
+        predicates:
+        - Path=/review-service/**   
+        - Method=GET, POST, PUT, DELETE
+        
+        #종봉님 챗서비스
+      - id: chat-service #순서 2번
+        uri: lb://CHAT-SERVICE #순서 3번
+        predicates:
+        - Path=/chat-service/** #순서 1번   
+        - Method=GET, POST, PUT, DELETE
+        
+        #종봉님 이미지파일 서비스
+      - id: imgfile-service 
+        uri: lb://IMGFILE-SERVICE 
+        predicates:
+        - Path=/imgfile-service/**   
+        - Method=GET, POST, PUT, DELETE
+        
+        #은솔님 유저서비스
+      - id: user-service 
+        uri: lb://USER-SERVICE 
+        predicates:
+        - Path=/user-service/**   
+        - Method=GET, POST, PUT, DELETE
+        
+        #유정님 큐앤에이서비스     
+      - id: qna-service 
+        uri: lb://QNA-SERVICE 
+        predicates:
+        - Path=/QNA-service/**   
+        - Method=GET, POST, PUT, DELETE
+        
+        #윤주님 레코드서비스
+      - id: record-service 
+        uri: lb://RECORD-SERVICE 
+        predicates:
+        - Path=/record-service/**   
+        - Method=GET, POST, PUT, DELETE
+
       
       
 eureka:
