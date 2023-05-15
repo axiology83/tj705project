@@ -1,8 +1,9 @@
 package kr.co.tj.boardservice.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,31 @@ public class BoardController {
 	
 	@Autowired
 	private CategoryFeign categoryFeign;
+	
+	
+	// 다중 삭제 추가
+		@DeleteMapping("/delete")
+		public ResponseEntity<?> deleteBoard(@RequestParam("id") String idList) {
+			Map<String, Object> map = new HashMap<>();
+			// 쉼표로 구분된 문자열을 배열로 변환
+			String[] ids = idList.split(",");
+
+			try {
+				// 배열의 각 요소를 숫자로 변환하여 삭제 작업 수행
+				for (String idStr : ids) {
+					long id = Long.parseLong(idStr);
+					boardService.delete(id);
+				}
+
+				map.put("result", "삭제 성공");
+				return ResponseEntity.ok().body(map);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				map.put("result", "삭제 실패");
+				return ResponseEntity.badRequest().body(map);
+			}
+		}
 	
 	
 	// 검색기능
