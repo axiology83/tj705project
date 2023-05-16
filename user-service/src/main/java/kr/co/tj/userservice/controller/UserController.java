@@ -1,5 +1,6 @@
 package kr.co.tj.userservice.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,7 +93,12 @@ public class UserController {
 	@GetMapping("/users")
 	public ResponseEntity<?> getUsers() {
 		List<UserDTO> userDTOs = userService.getUsers();
-		List<UserResponse> userResponses = userDTOs.stream().map(UserDTO::toUserResponse).collect(Collectors.toList());
+		//List<UserResponse> userResponses = userDTOs.stream().map(UserDTO::toUserResponse).collect(Collectors.toList());
+		List<UserResponse> userResponses = new ArrayList<>();
+		
+		for(UserDTO x : userDTOs) {
+			userResponses.add(x.toUserResponse());
+		}
 
 		return ResponseEntity.status(HttpStatus.OK).body(userResponses);
 	}
@@ -191,9 +197,7 @@ public class UserController {
 			userService.testinsert(dto);
 			
 		}
-		
-		
-		
+				
 	}
 
 }
