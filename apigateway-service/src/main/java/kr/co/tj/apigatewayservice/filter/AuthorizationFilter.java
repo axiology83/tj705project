@@ -3,7 +3,7 @@ package kr.co.tj.apigatewayservice.filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -18,11 +18,13 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthorizationFilter extends AbstractGatewayFilterFactory<AuthorizationFilter.Config>{
 	
-	private static final String SECRET_KEY="tj705team";
+	//private static final String SECRET_KEY="tj705team";
+	private Environment env;
 	
 	@Autowired
-	public AuthorizationFilter() {
+	public AuthorizationFilter(Environment env) {
 		super(Config.class);
+		this.env = env;
 	}
 
 	//@Data
@@ -69,7 +71,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 		String subject = null;
 		
 		try {
-			subject = Jwts.parser().setSigningKey(SECRET_KEY)
+			subject = Jwts.parser().setSigningKey(env.getProperty("data.SECRET_KEY"))
 			.parseClaimsJws(token).getBody().getSubject();
 			
 		} catch (Exception e) {

@@ -35,5 +35,4 @@ eureka:
       
       
 data:
-  test1: hello world
-  url: http://ORDER-SERVICE/order-service/orders/user/%s      
+  SECRET_KEY: tj705team    
