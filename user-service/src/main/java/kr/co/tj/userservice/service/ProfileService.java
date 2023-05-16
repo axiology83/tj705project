@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.tj.boardservice.dto.BoardResponse;
-import kr.co.tj.reviewservice.dto.ReviewResponse;
+//import kr.co.tj.reviewservice.dto.ReviewResponse;
 import kr.co.tj.userservice.dto.UserDTO;
 import kr.co.tj.userservice.dto.UserEntity;
 import kr.co.tj.userservice.feign.BoardFeign;
@@ -21,7 +21,7 @@ public class ProfileService {
 	private UserRepository userRepository;
 	
 	private BoardFeign boardFeign;
-	private ReviewFeign reviewFeign;
+//	private ReviewFeign reviewFeign;
 //	private QnAFeign qnaFeign;
 	
 	@Autowired
@@ -29,7 +29,7 @@ public class ProfileService {
 		super();
 		this.userRepository = userRepository;
 		this.boardFeign = boardFeign;
-		this.reviewFeign = reviewFeign;
+//		this.reviewFeign = reviewFeign;
 //		this.qnaFeign = qnaFeign;
 	}
 
@@ -39,7 +39,7 @@ public class ProfileService {
 		if (userEntity != null) {
 			return userEntity.getPassword();
 		} else {
-			throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
 		}
 	}
 
@@ -65,11 +65,11 @@ public class ProfileService {
 
 		// 서비스간의 통신: feign 이용해서 통신한 코드
 		List<BoardResponse> boardList = boardFeign.getBoardsByUsername(username);
-		List<ReviewResponse> reviewList = reviewFeign.getReviewsByUsername(username);
+//		List<ReviewResponse> reviewList = reviewFeign.getReviewsByUsername(username);
 //		List<QnAResponse> qnaList = qnaFeign.getQnAsByUsername(username);
 				
 		userDTO.setBoardList(boardList);
-		userDTO.setReviewList(reviewList);
+//		userDTO.setReviewList(reviewList);
 //		userDTO.setQnAList(qnaList);
 
 		return userDTO;

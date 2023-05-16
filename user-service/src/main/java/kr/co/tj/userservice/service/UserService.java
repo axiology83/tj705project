@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.tj.userservice.DataNotFoundException;
 import kr.co.tj.userservice.dto.UserDTO;
 import kr.co.tj.userservice.dto.UserEntity;
 import kr.co.tj.userservice.dto.UserRequest;
@@ -16,9 +17,9 @@ import kr.co.tj.userservice.jpa.UserRepository;
 
 @Service
 public class UserService {
-	
+
 	private UserRepository userRepository;
-	
+
 	private BCryptPasswordEncoder passwordEncoder;
 
 	private TokenProvider tokenProvider;
@@ -82,7 +83,7 @@ public class UserService {
 				userEntity.setPassword(encodedPassword);
 			} else {
 				// 비밀번호와 비밀번호 확인 값이 일치하지 않을 경우 예외 처리 또는 오류 메시지를 반환
-				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
+				throw new DataNotFoundException("오류발생. 다시 시도해주세요.");
 			}
 			// 이름 변경
 			userEntity.setName(userRequest.getName());
@@ -92,7 +93,7 @@ public class UserService {
 
 		} else {
 			// 기존 비밀번호가 올바르지 않을 경우 예외 처리 또는 오류 메시지를 반환
-			throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
+			throw new DataNotFoundException("오류발생. 다시 시도해주세요.");
 		}
 	}
 
@@ -102,7 +103,7 @@ public class UserService {
 		if (userEntity != null) {
 			return userEntity.getPassword();
 		} else {
-			throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+			throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
 		}
 	}
 
@@ -110,7 +111,9 @@ public class UserService {
 	@Transactional
 	public void deleteUser(String username) {
 		UserEntity userEntity = userRepository.findByUsername(username);
-
+		if (userEntity == null) {
+			throw new DataNotFoundException("사용자를 찾을 수 없습니다");
+		}
 		userRepository.delete(userEntity);
 	}
 
@@ -118,7 +121,10 @@ public class UserService {
 	@Transactional
 	public List<UserDTO> getUsers() {
 		List<UserEntity> userEntities = userRepository.findAll();
+		// 각 게시판의 목록을 하나의 스트림으로 변환
+		// Collection::stream - 각 게시판의 목록을 스트림으로 변환하는 함수
 		return userEntities.stream().map(userEntity -> new UserDTO().toUserDTO(userEntity))
+				// 변환된 스트림을 하나의 리스트로 모음
 				.collect(Collectors.toList());
 	}
 
@@ -126,7 +132,9 @@ public class UserService {
 	@Transactional
 	public UserDTO getUser(String username) {
 		UserEntity userEntity = userRepository.findByUsername(username);
-
+		if (userEntity == null) {
+			throw new DataNotFoundException("사용자를 찾을 수 없습니다");
+		}
 		return new UserDTO().toUserDTO(userEntity);
 	}
 

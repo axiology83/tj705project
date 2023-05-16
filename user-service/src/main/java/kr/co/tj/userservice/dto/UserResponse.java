@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import kr.co.tj.boardservice.dto.BoardResponse;
 import kr.co.tj.reviewservice.dto.ReviewResponse;
 import lombok.AllArgsConstructor;
@@ -17,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;

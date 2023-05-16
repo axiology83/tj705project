@@ -102,51 +102,51 @@ public class UserController {
 	}
 
 	// 수정
-	@PutMapping("/users/{username}")
+	@PutMapping("/users")
 	public ResponseEntity<?> updateUser(@PathVariable("username") String username,
 			@RequestBody UserRequest userRequest) {
 		try {
 			// 로그인한 사용자와 수정하려는 회원이 같은지 확인
 			if (!userRequest.getUsername().equals(username)) {
-				throw new IllegalArgumentException("접근 권한이 없습니다.");
+				throw new RuntimeException("접근 권한이 없습니다.");
 			}
 			// 기존 비밀번호와 입력한 비밀번호 비교
 			if (!passwordEncoder.matches(userRequest.getOrgPassword(), userService.getUserPassword(username))) {
-				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
+				throw new RuntimeException("오류발생. 다시 시도해주세요.");
 			}
 			// 새로 입력한 비밀번호와 비밀번호 확인 값 비교
 			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
-				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
+				throw new RuntimeException("오류발생. 다시 시도해주세요.");
 			}
 
 			userRequest = userService.updateUser(username, userRequest);
 			return ResponseEntity.status(HttpStatus.OK).body(userRequest);
 
-		} catch (IllegalArgumentException e) {
+		} catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
 		}
 	}
 
 	// 삭제
-	@DeleteMapping("/users/{username}")
+	@DeleteMapping("/users")
 	public ResponseEntity<?> deleteUser(@PathVariable("username") String username,
 			@RequestBody UserRequest userRequest) {
 
 		try {
 			// 로그인한 사용자와 수정하려는 회원이 같은지 확인
 			if (!userRequest.getUsername().equals(username)) {
-				throw new IllegalArgumentException("접근 권한이 없습니다.");
+				throw new RuntimeException("접근 권한이 없습니다.");
 			}
 			// 기존 비밀번호와 입력한 비밀번호 비교
 			if (!passwordEncoder.matches(userRequest.getPassword(), userService.getUserPassword(username))) {
-				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
+				throw new RuntimeException("오류발생. 다시 시도해주세요.");
 			}
 
 			userService.deleteUser(username);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
 		}
 	}
 
