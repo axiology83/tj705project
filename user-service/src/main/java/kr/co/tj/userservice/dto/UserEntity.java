@@ -43,5 +43,21 @@ public class UserEntity implements Serializable{
 	private Date createAt;
 	
 	private Date updateAt;
+	
+	private String token;
+	
+	public enum Role {
+		TYPE1("user"), TYPE2("admin"), TYPE3("blocked");
+
+		private String roleName;
+
+		Role(String roleName) {
+			this.roleName = roleName;
+		}
+
+		public String getRoleName() {
+			return roleName;
+		}
+	}
 
 }

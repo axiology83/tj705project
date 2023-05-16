@@ -2,7 +2,6 @@ package kr.co.tj.userservice.dto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -27,7 +26,21 @@ public class UserResponse implements Serializable {
 	private Date createAt;
 
 	private Date updateAt;
+	
+	private String token;
+	
+	public enum Role {
+		TYPE1("user"), TYPE2("admin"), TYPE3("blocked");
 
-	private List<OrderResponse> orderList;
+		private String roleName;
+
+		Role(String roleName) {
+			this.roleName = roleName;
+		}
+
+		public String getRoleName() {
+			return roleName;
+		}
+	}
 
 }

@@ -1,12 +1,15 @@
 package kr.co.tj.userservice.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.tj.userservice.dto.UserDTO;
+import kr.co.tj.userservice.dto.UserLoginRequest;
 import kr.co.tj.userservice.dto.UserRequest;
 import kr.co.tj.userservice.dto.UserResponse;
 import kr.co.tj.userservice.service.UserService;
@@ -25,20 +29,47 @@ import kr.co.tj.userservice.service.UserService;
 @RequestMapping("/user-service")
 public class UserController {
 
-	@Autowired
 	private Environment env;
 
-	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+
 	private UserService userService;
 
-	// username의 주문목록 가져오기(임의)
-	@GetMapping("/user/{username}/orders")
-	public ResponseEntity<?> getOrders(@PathVariable("username") String username) {
-		UserDTO userDTO = userService.getOrders(username);
+	@Autowired
+	public UserController(Environment env, BCryptPasswordEncoder passwordEncoder, UserService userService) {
+		super();
+		this.env = env;
+		this.passwordEncoder = passwordEncoder;
+		this.userService = userService;
+	}
+
+	// 로그인
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest) {
+		Map<String, Object> map = new HashMap<>();
+
+		if (userLoginRequest.getUsername() == null || userLoginRequest.getUsername().isEmpty()) {
+			map.put("result", "id를 바르게 입력하세요.");
+			return ResponseEntity.ok().body(map);
+		}
+
+		if (userLoginRequest.getPassword() == null || userLoginRequest.getPassword().isEmpty()) {
+			map.put("result", "비밀번호를 바르게 입력하세요.");
+			return ResponseEntity.ok().body(map);
+		}
+
+		UserDTO userDTO = UserDTO.toUserDTO(userLoginRequest);
+
+		userDTO = userService.login(userDTO);
+
+		if (userDTO == null) {
+			map.put("result", "사용자명 또는 비밀번호가 잘못되었습니다.");
+			return ResponseEntity.ok().body(map);
+		}
 
 		UserResponse userResponse = userDTO.toUserResponse();
-
-		return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+		map.put("result", userResponse);
+		return ResponseEntity.ok().body(map);
 	}
 
 	// 회원가입
@@ -75,18 +106,22 @@ public class UserController {
 	public ResponseEntity<?> updateUser(@PathVariable("username") String username,
 			@RequestBody UserRequest userRequest) {
 		try {
-			if (userRequest.getOrgPassword() == null
-					|| !userRequest.getOrgPassword().equals(userService.getUserPassword(username))) {
-				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
+			// 로그인한 사용자와 수정하려는 회원이 같은지 확인
+			if (!userRequest.getUsername().equals(username)) {
+				throw new IllegalArgumentException("접근 권한이 없습니다.");
 			}
-
+			// 기존 비밀번호와 입력한 비밀번호 비교
+			if (!passwordEncoder.matches(userRequest.getOrgPassword(), userService.getUserPassword(username))) {
+				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.(컨)");
+			}
+			// 새로 입력한 비밀번호와 비밀번호 확인 값 비교
 			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
-				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
+				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.(컨)");
 			}
 
 			userRequest = userService.updateUser(username, userRequest);
 			return ResponseEntity.status(HttpStatus.OK).body(userRequest);
-			
+
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
@@ -94,9 +129,25 @@ public class UserController {
 
 	// 삭제
 	@DeleteMapping("/users/{username}")
-	public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
-		userService.deleteUser(username);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	public ResponseEntity<?> deleteUser(@PathVariable("username") String username,
+			@RequestBody UserRequest userRequest) {
+
+		try {
+			// 로그인한 사용자와 수정하려는 회원이 같은지 확인
+			if (!userRequest.getUsername().equals(username)) {
+				throw new IllegalArgumentException("접근 권한이 없습니다.");
+			}
+			// 기존 비밀번호와 입력한 비밀번호 비교
+			if (!passwordEncoder.matches(userRequest.getPassword(), userService.getUserPassword(username))) {
+				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
+			}
+
+			userService.deleteUser(username);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 	}
 
 	// 테스트용

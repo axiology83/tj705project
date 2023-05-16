@@ -5,41 +5,50 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.tj.userservice.dto.OrderResponse;
 import kr.co.tj.userservice.dto.UserDTO;
 import kr.co.tj.userservice.dto.UserEntity;
 import kr.co.tj.userservice.dto.UserRequest;
-import kr.co.tj.userservice.feign.OrderFeign;
 import kr.co.tj.userservice.jpa.UserRepository;
 
 @Service
 public class UserService {
-
-	@Autowired
+	
 	private UserRepository userRepository;
+	
+	private BCryptPasswordEncoder passwordEncoder;
+
+	private TokenProvider tokenProvider;
 
 	@Autowired
-	private OrderFeign orderFeign;
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+			TokenProvider tokenProvider) {
+		super();
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.tokenProvider = tokenProvider;
+	}
 
-	// 주문목록 불러오기(임의)
-	public UserDTO getOrders(String username) {
-
-		UserEntity userEntity = userRepository.findByUsername(username);
+	// 로그인
+	public UserDTO login(UserDTO userDTO) {
+		UserEntity userEntity = userRepository.findByUsername(userDTO.getUsername());
 
 		if (userEntity == null) {
-			throw new RuntimeException("존재하지 않는 사용입니다.");
+			return null;
 		}
 
-		UserDTO userDTO = new UserDTO();
+		if (!passwordEncoder.matches(userDTO.getPassword(), userEntity.getPassword())) {
+			return null;
+		}
+
+		String token = tokenProvider.create(userEntity);
+
 		userDTO = userDTO.toUserDTO(userEntity);
-
-		// 서비스간의 통신: feign 이용해서 통신한 코드
-		List<OrderResponse> orderList = orderFeign.getOrdersByUsername(username);
-
-		userDTO.setOrderList(orderList);
+		userDTO.setToken(token);
+		userDTO.setPassword("");
 
 		return userDTO;
 	}
@@ -49,6 +58,9 @@ public class UserService {
 		userDTO = getDate(userDTO);
 
 		UserEntity userEntity = userDTO.toUserEntity();
+
+		// 비밀번호 암호화
+		userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
 
 		userEntity = userRepository.save(userEntity);
 
@@ -60,21 +72,27 @@ public class UserService {
 	public UserRequest updateUser(String username, UserRequest userRequest) {
 		UserEntity userEntity = userRepository.findByUsername(username);
 
-		// 입력한 기존 비밀번호(orgPassword)와 저장된 비밀번호(userEntity.getPassword())를 비교합니다
-		if (userRequest.getOrgPassword().equals(userEntity.getPassword())) {
-			// 새로운 비밀번호와 비밀번호 확인 값이 일치하는지 확인합니다
+		// 입력한 기존 비밀번호(orgPassword)와 저장된 비밀번호(userEntity.getPassword())를 비교
+		if (passwordEncoder.matches(userRequest.getOrgPassword(), userEntity.getPassword())) {
+			// 새로운 비밀번호와 비밀번호 확인 값이 일치하는지 확인
 			if (userRequest.getPassword().equals(userRequest.getPassword2())) {
-				userEntity.setName(userRequest.getName());
-				userEntity.setPassword(userRequest.getPassword());
-				userRepository.save(userEntity);
-				return userRequest;
+
+				// 비밀번호 암호화
+				String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
+				userEntity.setPassword(encodedPassword);
 			} else {
-				// 비밀번호와 비밀번호 확인 값이 일치하지 않을 경우 예외 처리 또는 오류 메시지를 반환할 수 있습니다.
-				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
+				// 비밀번호와 비밀번호 확인 값이 일치하지 않을 경우 예외 처리 또는 오류 메시지를 반환
+				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.(서)");
 			}
+			// 이름 변경
+			userEntity.setName(userRequest.getName());
+
+			userRepository.save(userEntity);
+			return userRequest;
+
 		} else {
-			// 기존 비밀번호가 올바르지 않을 경우 예외 처리 또는 오류 메시지를 반환할 수 있습니다.
-			throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
+			// 기존 비밀번호가 올바르지 않을 경우 예외 처리 또는 오류 메시지를 반환
+			throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.(서)");
 		}
 	}
 
