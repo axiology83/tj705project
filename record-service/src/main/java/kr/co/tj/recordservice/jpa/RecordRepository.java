@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import kr.co.tj.recordservice.dto.RecordEntity;
 
 public interface RecordRepository extends JpaRepository<RecordEntity, Long>{
+
+	boolean existsByBoardIdAndBuyer(Long boardId, String buyer);
 	
 }
