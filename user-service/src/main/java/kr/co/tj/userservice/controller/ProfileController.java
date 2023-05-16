@@ -1,7 +1,5 @@
 package kr.co.tj.userservice.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -12,10 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.tj.boardservice.dto.BoardEntity;
-import kr.co.tj.boardservice.service.BoardService;
 import kr.co.tj.userservice.dto.UserDTO;
 import kr.co.tj.userservice.dto.UserResponse;
+import kr.co.tj.userservice.service.ProfileService;
 import kr.co.tj.userservice.service.UserService;
 
 @RestController
@@ -26,15 +23,13 @@ public class ProfileController {
 
 	private UserService userService;
 
-	private BoardService boardService;
+	private ProfileService profileService;
 
 	@Autowired
-	public ProfileController(Environment env, BCryptPasswordEncoder passwordEncoder, UserService userService,
-			BoardService boardService) {
+	public ProfileController(Environment env, BCryptPasswordEncoder passwordEncoder, UserService userService) {
 		super();
 		this.env = env;
 		this.userService = userService;
-		this.boardService = boardService;
 	}
 
 	// 정보 상세보기(이름, 닉네임, 가입일, 갱신일)
@@ -46,13 +41,14 @@ public class ProfileController {
 		return ResponseEntity.status(HttpStatus.OK).body(userResponse);
 	}
 
-	// 게시글 보기
-	@GetMapping("/boards/users/{username}")
-	public ResponseEntity<List<BoardEntity>> getUserBoards(@PathVariable("username") String username) {
-		// Board 서비스에서 게시글을 받아옴
-		List<BoardEntity> boards = boardService.getBoardsByUser(username);
-		// 게시글을 응답으로 반환
-		return ResponseEntity.ok(boards);
+	// username의 게시글 가져오기(임의)
+	@GetMapping("/user/{username}/posts")
+	public ResponseEntity<?> getBoards(@PathVariable("username") String username) {
+		UserDTO userDTO = profileService.getAllPosts(username);
+
+		UserResponse userResponse = userDTO.toUserResponse();
+
+		return ResponseEntity.status(HttpStatus.OK).body(userResponse);
 	}
 
 	// 테스트용

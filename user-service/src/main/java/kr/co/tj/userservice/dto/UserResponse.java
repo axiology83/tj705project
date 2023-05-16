@@ -2,9 +2,12 @@ package kr.co.tj.userservice.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import kr.co.tj.boardservice.dto.BoardResponse;
+import kr.co.tj.reviewservice.dto.ReviewResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +31,12 @@ public class UserResponse implements Serializable {
 	private Date updateAt;
 	
 	private String token;
+	
+	private List<BoardResponse> boardList;
+	
+	private List<ReviewResponse> reviewList;
+	
+//	private List<QnAResponse> qnaList;
 	
 	public enum Role {
 		TYPE1("user"), TYPE2("admin"), TYPE3("blocked");

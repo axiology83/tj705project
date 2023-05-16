@@ -82,7 +82,7 @@ public class UserService {
 				userEntity.setPassword(encodedPassword);
 			} else {
 				// 비밀번호와 비밀번호 확인 값이 일치하지 않을 경우 예외 처리 또는 오류 메시지를 반환
-				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.(서)");
+				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
 			}
 			// 이름 변경
 			userEntity.setName(userRequest.getName());
@@ -92,7 +92,7 @@ public class UserService {
 
 		} else {
 			// 기존 비밀번호가 올바르지 않을 경우 예외 처리 또는 오류 메시지를 반환
-			throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.(서)");
+			throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
 		}
 	}
 

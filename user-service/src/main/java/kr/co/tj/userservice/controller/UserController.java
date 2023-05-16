@@ -49,12 +49,12 @@ public class UserController {
 		Map<String, Object> map = new HashMap<>();
 
 		if (userLoginRequest.getUsername() == null || userLoginRequest.getUsername().isEmpty()) {
-			map.put("result", "id를 바르게 입력하세요.");
+			map.put("result", "오류발생. 다시 시도해주세요.");
 			return ResponseEntity.ok().body(map);
 		}
 
 		if (userLoginRequest.getPassword() == null || userLoginRequest.getPassword().isEmpty()) {
-			map.put("result", "비밀번호를 바르게 입력하세요.");
+			map.put("result", "오류발생. 다시 시도해주세요.");
 			return ResponseEntity.ok().body(map);
 		}
 
@@ -63,7 +63,7 @@ public class UserController {
 		userDTO = userService.login(userDTO);
 
 		if (userDTO == null) {
-			map.put("result", "사용자명 또는 비밀번호가 잘못되었습니다.");
+			map.put("result", "오류발생. 다시 시도해주세요.");
 			return ResponseEntity.ok().body(map);
 		}
 
@@ -112,18 +112,18 @@ public class UserController {
 			}
 			// 기존 비밀번호와 입력한 비밀번호 비교
 			if (!passwordEncoder.matches(userRequest.getOrgPassword(), userService.getUserPassword(username))) {
-				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.(컨)");
+				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
 			}
 			// 새로 입력한 비밀번호와 비밀번호 확인 값 비교
 			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
-				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.(컨)");
+				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
 			}
 
 			userRequest = userService.updateUser(username, userRequest);
 			return ResponseEntity.status(HttpStatus.OK).body(userRequest);
 
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
 		}
 	}
 
@@ -139,7 +139,7 @@ public class UserController {
 			}
 			// 기존 비밀번호와 입력한 비밀번호 비교
 			if (!passwordEncoder.matches(userRequest.getPassword(), userService.getUserPassword(username))) {
-				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
+				throw new IllegalArgumentException("오류발생. 다시 시도해주세요.");
 			}
 
 			userService.deleteUser(username);
