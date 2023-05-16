@@ -1,8 +1,11 @@
 package kr.co.tj.userservice.controller;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,8 +160,32 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
 	}
 	
-	@PostMapping("/testinsert")
+	@PostMapping("/users/testinsert")
 	public void testinsert() {
+		Random rand = new Random();
+		for (int i = 1; i < 500; i++) {
+			
+			String idnum = String.format("%03d", i);
+			int year = rand.nextInt(3) + 2021;
+			int month = rand.nextInt(12) + 1;
+			int day = rand.nextInt(28) + 1;
+			Calendar cal = Calendar.getInstance();
+			cal.set(year, month-1, day);
+			Date date = cal.getTime();
+			
+			UserDTO dto = UserDTO.builder()
+					.username("m" + idnum)
+					.name(idnum + "번째 장원영")
+					.password("1")
+					.createAt(date)
+					.updateAt(date)
+					.build();
+			
+			userService.testinsert(dto);
+			
+		}
+		
+		
 		
 	}
 

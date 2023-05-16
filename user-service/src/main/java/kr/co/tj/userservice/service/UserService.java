@@ -147,4 +147,15 @@ public class UserService {
 		return userDTO;
 	}
 
+
+	public void testinsert(UserDTO dto) {
+		
+		String encPassword = passwordEncoder.encode(dto.getPassword());
+		dto.setPassword(encPassword);
+
+		UserEntity userEntity = dto.toUserEntity();
+		userEntity = userRepository.save(userEntity);
+		
+	}
+
 }
