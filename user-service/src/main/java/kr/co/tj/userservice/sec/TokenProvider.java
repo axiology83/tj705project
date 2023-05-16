@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import kr.co.tj.userservice.jpa.UserEntity;
+import kr.co.tj.userservice.persistence.UserEntity;
 
 @Component
 public class TokenProvider {

@@ -1,4 +1,4 @@
-package kr.co.tj.userservice.jpa;
+package kr.co.tj.userservice.persistence;
 
 import java.util.Optional;
 

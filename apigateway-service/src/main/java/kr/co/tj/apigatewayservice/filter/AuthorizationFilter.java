@@ -36,17 +36,6 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 	@Override
 	public GatewayFilter apply(Config config) {
 		
-
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		System.out.println("필터가 먹는지좀 보자!!!!!!!!!!!!");
-		
-		
 //		config.num1 이런식으로 사용 가능
 		
 		

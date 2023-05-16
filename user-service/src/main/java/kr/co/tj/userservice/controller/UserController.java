@@ -27,6 +27,7 @@ import kr.co.tj.userservice.dto.UserRequest;
 import kr.co.tj.userservice.dto.UserResponse;
 import kr.co.tj.userservice.service.UserService;
 
+
 @RestController
 @RequestMapping("/user-service")
 public class UserController {
@@ -160,10 +161,16 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
 	}
 	
-	@PostMapping("/users/testinsert")
+	@PostMapping("/testinsert")
 	public void testinsert() {
+		System.out.println("테스트용 데이터를 여러개 주입합니다.");
+		System.out.println("테스트용 데이터를 여러개 주입합니다.");
+		System.out.println("테스트용 데이터를 여러개 주입합니다.");
+		System.out.println("테스트용 데이터를 여러개 주입합니다.");
+		System.out.println("테스트용 데이터를 여러개 주입합니다.");
+		
 		Random rand = new Random();
-		for (int i = 1; i < 500; i++) {
+		for (int i = 1; i < 101; i++) {
 			
 			String idnum = String.format("%03d", i);
 			int year = rand.nextInt(3) + 2021;
