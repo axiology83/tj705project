@@ -24,16 +24,21 @@ public class UserService {
 	private BCryptPasswordEncoder passwordEncoder;
 	private TokenProvider tokenProvider;
 	
+	
+	
 	@Autowired
-	public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+			TokenProvider tokenProvider) {
+		super();
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.tokenProvider = tokenProvider;
 	}
-	
-	
+
+
 	public UserDTO login(UserDTO userDTO) {
 		Optional<UserEntity> optional = userRepository.findByUsername(userDTO.getUsername());
+				
 		
 		if(!optional.isPresent()) {
 			return null;
@@ -47,6 +52,8 @@ public class UserService {
 		
 		
 		String token = tokenProvider.create(entity);
+		
+		userDTO.toUserDTO(entity);
 		userDTO.setToken(token);
 		userDTO.setPassword("");
 		return userDTO;

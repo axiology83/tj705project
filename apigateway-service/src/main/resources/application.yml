@@ -7,6 +7,15 @@ spring:
     
   cloud:
     gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: '*'
+            allow-credentials: true
+            allowedMethods: POST, GET, PUT, DELETE
+            
       routes:
       #홍구님 보드 서비스
       - id: board-service

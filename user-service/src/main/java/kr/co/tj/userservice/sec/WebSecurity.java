@@ -14,18 +14,21 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http
-		.cors().and().csrf().disable()
-		.httpBasic().disable()
+		.cors()
+		.and()
+		.csrf()
+		.disable()
+		.httpBasic()
+		.disable()
 		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
-		.and()
 		
-		.authorizeRequests()
-		.antMatchers("/user-service/users/**").permitAll()
 		
-		.and()
+		http.authorizeRequests()
+		.antMatchers("/user-service/users/**").permitAll();
 		
+		http
 		.headers().frameOptions().disable();
 		
 	}

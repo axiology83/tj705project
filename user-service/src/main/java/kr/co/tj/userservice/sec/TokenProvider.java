@@ -11,20 +11,21 @@ import kr.co.tj.userservice.jpa.UserEntity;
 @Component
 public class TokenProvider {
 	
-	private static final String SECRETE_KEY = "tj705team";
+	private static final String SECRET_KEY = "tj705team";
+	
 	
 	public String create(UserEntity userEntity) {
 		long now = System.currentTimeMillis();
 		
 		Date today = new Date(now);
-		Date exireDate = new Date(now+1000*1*60*60*24);
+		Date expireDate = new Date(now + 1000*60*60*24);
 		
 		return Jwts.builder()
-				.signWith(SignatureAlgorithm.HS512, SECRETE_KEY)
+				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
 				.setSubject(userEntity.getUsername())
 				.setIssuer("user-service")
 				.setIssuedAt(today)
-				.setExpiration(exireDate)
+				.setExpiration(expireDate)
 				.compact();
 	}
 

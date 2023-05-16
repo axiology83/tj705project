@@ -1,6 +1,8 @@
 package kr.co.tj.userservice.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.tj.userservice.dto.UserDTO;
+import kr.co.tj.userservice.dto.UserLoginRequest;
 import kr.co.tj.userservice.dto.UserRequest;
 import kr.co.tj.userservice.dto.UserResponse;
 import kr.co.tj.userservice.service.UserService;
@@ -31,9 +34,42 @@ public class UserController {
 	
 	@Autowired
 	public UserController(Environment env, UserService userService) {
+		super();
 		this.env = env;
 		this.userService = userService;
 	}
+
+
+
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest){
+		Map<String, Object> map = new HashMap<>();
+		
+		if(userLoginRequest.getUsername() == null || userLoginRequest.getUsername().isEmpty()) {
+			map.put("result", "id를 똑바로 입력하세요");
+			return ResponseEntity.ok().body(map);
+		}
+		
+		if(userLoginRequest.getPassword() == null || userLoginRequest.getPassword().isEmpty()) {
+			map.put("result", "password를 똑바로 입력하세요");
+			return ResponseEntity.ok().body(map);
+		}
+		
+		UserDTO userDTO = UserDTO.toUserDTO(userLoginRequest);
+		
+		userDTO = userService.login(userDTO);
+		
+		if(userDTO == null) {
+			map.put("result", "사용자명이나 비밀번호가 잘못되었습니다.");
+			return ResponseEntity.ok().body(map);
+		}
+		
+		UserResponse userResponse = userDTO.toUserResponse();
+		map.put("result", userResponse);
+		return ResponseEntity.ok().body(map);
+	}
+	
+	
 
 	
 
@@ -67,32 +103,44 @@ public class UserController {
 	}
 
 	// 수정
-//	@PutMapping("/users")
-//	public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
-//		String org
-//	
-//			if (userRequest.getOrgPassword() == null
-//					|| !userRequest.getOrgPassword().equals(userService.getUser(userRequest.getUsername()).getPassword())) {
-//				throw new IllegalArgumentException("기존 비밀번호가 올바르지 않습니다.");
-//			}
-//
-//			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
-//				throw new IllegalArgumentException("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-//			}
-//
-//			userRequest = userService.updateUser(userRequest);
-//			return ResponseEntity.status(HttpStatus.OK).body(userRequest);
-//			
-//		
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//		
-//	}
+	@PutMapping("/users")
+	public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+		String orgPassword = userRequest.getOrgPassword();
+		String dbPassword = userService.getUser(userRequest.getUsername()).getPassword();
+	
+			if (orgPassword == null || !orgPassword.equals(dbPassword)) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호를 확인하세요");
+			}
+
+			if (!userRequest.getPassword().equals(userRequest.getPassword2())) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호를 확인하세요");
+			}
+			
+			UserDTO userDTO = UserDTO.toUserDTO(userRequest);
+
+			userDTO = userService.updateUser(userDTO);
+			UserResponse userResponse = userDTO.toUserResponse();
+			
+			
+			return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+			
+		
+		
+		
+	}
 
 	// 삭제
 	@DeleteMapping("/users")
-	public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
-		userService.deleteUser(username);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	public ResponseEntity<?> deleteUser(@RequestBody UserRequest userRequest) {
+		
+		UserDTO orgDTO = userService.getUser(userRequest.getUsername());
+		if(!orgDTO.getPassword().equals(userRequest.getPassword())){
+			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비번 확인하세요");
+		}
+		
+		userService.deleteUser(orgDTO.getUsername());
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	// 테스트용
@@ -102,6 +150,12 @@ public class UserController {
 	}
 	
 	
+	@GetMapping("/test")
+	public ResponseEntity<?> test(){
+		System.out.println(":::::::::::::::잘 될까?::::::로그인 하고 토큰 첨부해야 되는데:::::::::::::");
+		
+		return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
+	}
 	
 	@PostMapping("/testinsert")
 	public void testinsert() {
