@@ -103,6 +103,10 @@ public class BoardController {
 	 @PutMapping("/update")
 	public ResponseEntity<?> update(@RequestBody BoardResponse boardResponse) {
 		 
+		 if(boardResponse == null) {
+			 return ResponseEntity.status(HttpStatus.OK).body("값을 입력해주세요");
+		 }
+		 
 		BoardDTO boardDTO = boardService.update(boardResponse);
 		
 		boardResponse = boardDTO.toBoardResponse();
@@ -119,6 +123,10 @@ public class BoardController {
 	// 삭제
 	@DeleteMapping("")
 	public ResponseEntity<?> delete(@RequestBody BoardRequest request) {
+		
+		if(request.getId() == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("다시 확인해주세요");
+		}
 		
 		try {
 			boardService.delete(request.getId());
@@ -167,6 +175,14 @@ public class BoardController {
 	// 게시글 작성
 	 @PostMapping("/boards") 
 	public ResponseEntity<?> createBoard(@RequestBody BoardRequest boardRequest) {
+		
+		 if(boardRequest.getTitle() == null || boardRequest.getTitle().equals("")) {
+			 return ResponseEntity.status(HttpStatus.OK).body("제목을 입력해주세요"); 
+		 }
+		 
+		 if(boardRequest.getContent() == null || boardRequest.getContent().equals("")) {
+			 return ResponseEntity.status(HttpStatus.OK).body("내용을 입력해주세요"); 
+		 }
 	  
 	 BoardDTO boardDTO = BoardDTO.toBoardDTO(boardRequest);
 	  
@@ -182,7 +198,7 @@ public class BoardController {
 	 //  반복문
 	 @PostMapping("/testinsert")
 	 public void writeArticles() {
-		  for (int i = 1; i < 100; i++) {
+		  for (int i = 1; i < 200; i++) {
 			  BoardRequest boardRequest = new BoardRequest();
 			  boardRequest.setUsername("m001");
 		    boardRequest.setTitle("제목 " + i);   // 글의 제목

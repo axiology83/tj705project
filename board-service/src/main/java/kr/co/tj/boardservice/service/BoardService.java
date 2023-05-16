@@ -26,10 +26,11 @@ public class BoardService {
 	
 	@Autowired
 	private BoardRepository boardRepository;
-
+	// 글 작성 코드
 	public BoardDTO createBoard(BoardDTO boardDTO) {
-		
+		// 시간날짜 받아오기
 		boardDTO = getDate(boardDTO);
+		// 조회수 기본값 0으로 설정
 		boardDTO.setReadCnt(0L);
 		
 		BoardEntity boardEntity = boardDTO.toBoardEntity();
@@ -40,7 +41,7 @@ public class BoardService {
 		return boardDTO.toBoardDTO2(boardEntity);
 				
 	}
-	
+	//시간 날짜 받아오는 메서드 
 	private  BoardDTO getDate(BoardDTO boardDTO) {
 		Date now = new Date();
 		
@@ -51,7 +52,7 @@ public class BoardService {
 		
 		return boardDTO;
 	}
-
+	// 글 자세히보기
 	 public BoardDTO findById(Long id) {
 		
 		Optional<BoardEntity> optional = boardRepository.findById(id);
@@ -65,7 +66,7 @@ public class BoardService {
 		
 		return BoardDTO.toBoardDTO(entity);
 	}
-
+	 // 글 전체 목록 가져오는 코드
 	public List<BoardDTO> findAll() {
 		
 		List<BoardEntity> list = boardRepository.findAll();
@@ -77,7 +78,7 @@ public class BoardService {
 		
 		return dtoList;
 	}
-	
+	// 삭제
 	public void delete(Long id) {
 		
 	
@@ -86,7 +87,7 @@ public class BoardService {
 	}
 
 	
-	
+	// 글 수정
 	@Transactional
 	public BoardDTO update(BoardResponse boardResponse) {
 		Optional<BoardEntity> optional = boardRepository.findById(boardResponse.getId());
@@ -110,7 +111,7 @@ public class BoardService {
 		
 		return boardDTO;
 	}
-
+	//페이징 관련
 	public Page<BoardDTO> findAll(Integer page) {
 		List<Sort.Order> sortList = new ArrayList<>();
 		sortList.add(Sort.Order.desc("id"));
@@ -140,7 +141,7 @@ public class BoardService {
 				
 		return page_dto;
 	}
-
+	// 검색 관련코드
 	public Page<BoardDTO> search(int pageNum, String keyword) {
 		List<Sort.Order> sortList = new ArrayList<>();
 		sortList.add(Sort.Order.desc("id"));
@@ -167,14 +168,14 @@ public class BoardService {
 		 return page_dto;
 		
 	}
-	
+	// 조회수 +1씩 늘어나는코드
 	@Transactional
 	public BoardDTO readCntUpdate(BoardDTO dto) {
 		Optional<BoardEntity> optional =  boardRepository.findById(dto.getId());
 		
 		BoardEntity orgEntity = optional.get();
 		long readCnt = orgEntity.getReadCnt() +1 ;
-		
+		//조회수만 1늘어나고 나머지는 기존 값 그대로
 		BoardEntity entity = BoardEntity.builder()
 				.title(orgEntity.getTitle())
 				.id(orgEntity.getId())
@@ -194,7 +195,7 @@ public class BoardService {
 		
 		
 				}
-
+	
 	public List<BoardResponse> getPage(Pageable pageable) {
 		Page<BoardEntity> entity = boardRepository.findAll(pageable);
 		List<BoardResponse> boardResponse = new ArrayList<>();
