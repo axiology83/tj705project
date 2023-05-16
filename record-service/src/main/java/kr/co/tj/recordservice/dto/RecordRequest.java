@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RecordRequest {
 	private Long boardId; // 판매글의 아이디
-	private String username; // 판메자의 닉네임 // feign 때문에 변수 통일
+	private String seller; // 판메자의 닉네임 // feign 때문에 변수 통일
 	private String buyer; // 구매자의 닉네임
 	private Boolean hasChat; // 채팅 여부
 	private Boolean hasLike; // 찜 여부

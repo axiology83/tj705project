@@ -17,7 +17,7 @@ public class RecordDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long boardId; // 판매글의 아이디
-	private String username; // 판메자의 닉네임 // feign 때문에 변수 통일
+	private String seller; // 판메자의 닉네임 
 	private String buyer; // 구매자의 닉네임
 	private Boolean hasChat; // 채팅 여부
 	private Boolean hasLike; // 찜 여부
@@ -34,7 +34,7 @@ public class RecordDTO implements Serializable{
 		
 		return RecordDTO.builder()
 				.boardId(recordRequest.getBoardId())
-				.username(recordRequest.getUsername())
+				.seller(recordRequest.getSeller())
 				.buyer(recordRequest.getBuyer())
 				.hasChat(recordRequest.getHasChat())
 				.hasLike(recordRequest.getHasLike())
@@ -51,7 +51,7 @@ public class RecordDTO implements Serializable{
 
 		return RecordResponse.builder()
 				.boardId(boardId)
-				.username(username)
+				.seller(seller)
 				.buyer(buyer)
 				.hasChat(hasChat)
 				.hasLike(hasLike)
@@ -68,7 +68,7 @@ public class RecordDTO implements Serializable{
 		// TODO Auto-generated method stub
 		return RecordEntity.builder()
 				.boardId(boardId)
-				.username(username)
+				.seller(seller)
 				.buyer(buyer)
 				.hasChat(hasChat)
 				.hasLike(hasLike)
@@ -84,7 +84,7 @@ public class RecordDTO implements Serializable{
 	public static RecordDTO toRecordDTO(ReviewResponse reviewResponse) {
 		return RecordDTO.builder()
 				.boardId(reviewResponse.getBoardId())
-				.username(reviewResponse.getUsername())
+				.seller(reviewResponse.getSeller())
 				.buyer(reviewResponse.getBuyer())
 				.hasChat(reviewResponse.getHasChat())
 				.hasLike(reviewResponse.getHasLike())
@@ -100,7 +100,7 @@ public class RecordDTO implements Serializable{
 	public static RecordDTO toRecordDTO(BoardResponse boardResponse) {
 		return RecordDTO.builder()
 				.boardId(boardResponse.getBoardId())
-				.username(boardResponse.getUsername())
+				.seller(boardResponse.getSeller())
 				.buyer(boardResponse.getBuyer())
 				.hasChat(boardResponse.getHasChat())
 				.hasLike(boardResponse.getHasLike())

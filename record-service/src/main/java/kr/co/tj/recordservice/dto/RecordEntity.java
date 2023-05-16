@@ -33,7 +33,7 @@ public class RecordEntity implements Serializable{
 	private Long boardId; // 판매글의 아이디
 	
 	@Column(nullable =false)
-	private String username; // 판메자의 닉네임 // feign 때문에 변수 통일
+	private String seller; // 판메자의 닉네임 // feign 때문에 변수 통일
 	
 	@Column(nullable =false)
 	private String buyer; // 구매자의 닉네임
