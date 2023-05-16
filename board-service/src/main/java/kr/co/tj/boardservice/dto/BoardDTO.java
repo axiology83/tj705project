@@ -25,9 +25,9 @@ public class BoardDTO implements Serializable{
 
 	private String content;
 	
-	private Date createAt;
+	private Date createDate;
 	
-	private Date updateAt;
+	private Date updateDate;
 	
 	private Long readCnt;
 	
@@ -51,8 +51,8 @@ public class BoardDTO implements Serializable{
 				.username(username)
 				.title(title)
 				.content(content)
-				.createAt(createAt)
-				.updateAt(updateAt)
+				.createDate(createDate)
+				.updateDate(updateDate)
 				.readCnt(readCnt)
 				.cateName(cateName)
 				.build();
@@ -65,8 +65,8 @@ public class BoardDTO implements Serializable{
 				.username(username)
 				.title(title)
 				.content(content)
-				.createAt(createAt)
-				.updateAt(updateAt)
+				.createDate(createDate)
+				.updateDate(updateDate)
 				.readCnt(readCnt)
 				.cateName(cateName)
 				.build();
@@ -77,8 +77,8 @@ public class BoardDTO implements Serializable{
 		this.username = entity.getUsername();
 		this.title = entity.getTitle();
 		this.content = entity.getContent();
-		this.createAt = entity.getCreateAt();
-		this.updateAt = entity.getUpdateAt();
+		this.createDate = entity.getCreateDate();
+		this.updateDate = entity.getUpdateDate();
 		this.readCnt = entity.getReadCnt();	
 		this.cateName = entity.getCateName();
 		return this;
@@ -95,8 +95,8 @@ public static BoardDTO toBoardDTO(BoardEntity boardEntity) {
 				.title(boardEntity.getTitle())
 				.content(boardEntity.getContent())
 				.readCnt(boardEntity.getReadCnt())
-				.createAt(boardEntity.getCreateAt())
-				.updateAt(boardEntity.getUpdateAt())
+				.createDate(boardEntity.getCreateDate())
+				.updateDate(boardEntity.getUpdateDate())
 				.cateName(boardEntity.getCateName())
 				.build();
 	}
@@ -109,8 +109,8 @@ public BoardResponse toBoardFindResponse(BoardEntity x) {
 			.username(x.getUsername())
 			.title(x.getTitle())
 			.content(x.getContent())
-			.createAt(x.getCreateAt())
-			.updateAt(x.getUpdateAt())
+			.createDate(x.getCreateDate())
+			.updateDate(x.getUpdateDate())
 			.readCnt(x.getReadCnt())
 			.cateName(x.getCateName())
 			.build();

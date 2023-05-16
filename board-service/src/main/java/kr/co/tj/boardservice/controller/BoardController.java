@@ -32,11 +32,19 @@ import kr.co.tj.boardservice.service.BoardService;
 @RequestMapping("/board-service")
 public class BoardController {
 
-	@Autowired
+	
 	private BoardService boardService;
+	private CategoryFeign categoryFeign;
 	
 	@Autowired
-	private CategoryFeign categoryFeign;
+	public BoardController(BoardService boardService, CategoryFeign categoryFeign) {
+		super();
+		this.boardService = boardService;
+		this.categoryFeign = categoryFeign;
+	}
+
+
+	
 	
 	
 	// 다중 삭제 추가
@@ -101,6 +109,7 @@ public class BoardController {
 		
 		// 마찬가지로 수정 후에 수정한 카테고리 이름 들어가게끔 하는 코드
 		CategoryResponse name = categoryFeign.getNameByCid(boardDTO.getCid());
+		
 		
 		boardDTO.setCateName(name.getName());
 		

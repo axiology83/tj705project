@@ -26,9 +26,6 @@ public class BoardService {
 	
 	@Autowired
 	private BoardRepository boardRepository;
-	
-	@Autowired
-	private CategoryFeign categoryFeign;
 
 	public BoardDTO createBoard(BoardDTO boardDTO) {
 		
@@ -47,10 +44,10 @@ public class BoardService {
 	private  BoardDTO getDate(BoardDTO boardDTO) {
 		Date now = new Date();
 		
-		if(boardDTO.getCreateAt() ==null) {
-			boardDTO.setCreateAt(now);
+		if(boardDTO.getCreateDate() ==null) {
+			boardDTO.setCreateDate(now);
 		}
-		boardDTO.setUpdateAt(now);
+		boardDTO.setUpdateDate(now);
 		
 		return boardDTO;
 	}
@@ -105,7 +102,7 @@ public class BoardService {
 		boardEntity.setTitle(boardResponse.getTitle());
 		boardEntity.setContent(boardResponse.getContent());
 		boardEntity.setCid(boardResponse.getCid());
-		boardEntity.setUpdateAt(now);
+		boardEntity.setUpdateDate(now);
 		
 		 boardEntity = boardRepository.save(boardEntity);
 		 
@@ -129,8 +126,8 @@ public class BoardService {
 						boardEntity.getUsername(),
 						boardEntity.getTitle(),
 						boardEntity.getContent(),
-						boardEntity.getCreateAt(),
-						boardEntity.getUpdateAt(),
+						boardEntity.getCreateDate(),
+						boardEntity.getUpdateDate(),
 						boardEntity.getReadCnt(),
 						boardEntity.getCateName()
 						
@@ -161,8 +158,8 @@ public class BoardService {
 						 boardEntity.getUsername(),
 						 boardEntity.getTitle(),
 						 boardEntity.getContent(),
-						 boardEntity.getCreateAt(),
-						 boardEntity.getUpdateAt(),
+						 boardEntity.getCreateDate(),
+						 boardEntity.getUpdateDate(),
 						 boardEntity.getReadCnt(),
 						 boardEntity.getCateName()
 						 )
@@ -185,8 +182,8 @@ public class BoardService {
 				.username(orgEntity.getUsername())
 				.readCnt(readCnt)
 				.cid(orgEntity.getCid())
-				.createAt(orgEntity.getCreateAt())
-				.updateAt(orgEntity.getUpdateAt())
+				.createDate(orgEntity.getCreateDate())
+				.updateDate(orgEntity.getUpdateDate())
 				.cateName(orgEntity.getCateName())
 				.build();
 		

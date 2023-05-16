@@ -39,9 +39,9 @@ public class BoardEntity implements Serializable {
 	@Column(nullable = false)
 	private String content;
 	
-	private Date createAt;
+	private Date createDate;
 	
-	private Date updateAt;
+	private Date updateDate;
 	
 	@ColumnDefault("0")
 	private Long readCnt;

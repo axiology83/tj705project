@@ -26,9 +26,9 @@ public class BoardResponse implements Serializable{
 
 	private String content;
 	
-	private Date createAt;
+	private Date createDate;
 	
-	private Date updateAt;
+	private Date updateDate;
 	
 	private Long readCnt;
 	
