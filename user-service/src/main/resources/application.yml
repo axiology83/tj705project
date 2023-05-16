@@ -32,8 +32,3 @@ eureka:
     fetch-registry: true # 주기적으로 다른 인스턴스의 데이터를 받아와서 갱신
     service-url:
       defaultZone: http://localhost:8761/eureka # 유레카 서버의 주소 정보
-      
-      
-data:
-  test1: hello world
-  url: http://ORDER-SERVICE/order-service/orders/user/%s      
