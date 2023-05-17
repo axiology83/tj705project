@@ -17,11 +17,7 @@ spring:
             allowedMethods: POST, GET, PUT, DELETE
             
       routes:
-<<<<<<< HEAD
-        #홍구님 보드 서비스
-=======
       #홍구님 보드 서비스
->>>>>>> b8c36485186e309c3270234cc02b07635dc08c89
       - id: board-service
         uri: lb://BOARD-SERVICE
         predicates:
@@ -40,8 +36,6 @@ spring:
         uri: lb://REVIEW-SERVICE 
         predicates:
         - Path=/review-service/**   
-<<<<<<< HEAD
-=======
         - Method=GET, POST, PUT, DELETE
         
         #종봉님 챗서비스
@@ -58,7 +52,7 @@ spring:
         - Path=/imgfile-service/**   
         - Method=GET, POST, PUT, DELETE
         
-        # user-service   
+           
       - id: user-service 
         uri: lb://USER-SERVICE 
         predicates:
@@ -71,18 +65,7 @@ spring:
         - Path=/user-service/login 
         - Method=POST
         
-      - id: user-service 
-        uri: lb://USER-SERVICE 
-        predicates:
-        - Path=/user-service/testinsert
-        - Method=POST
-      
-      - id: user-service 
-        uri: lb://USER-SERVICE 
-        predicates:
-        - Path=/user-service/health_check
-        - Method=GET
-
+        #은솔님 유저서비스
       - id: user-service 
         uri: lb://USER-SERVICE 
         predicates:
@@ -90,44 +73,6 @@ spring:
         - Method=GET, POST, PUT, DELETE
         filters:
         - name: AuthorizationFilter
-     
-      
-        
-        #유정님 큐앤에이서비스     
-      - id: qna-service 
-        uri: lb://QNA-SERVICE 
-        predicates:
-        - Path=/QNA-service/**   
-        - Method=GET, POST, PUT, DELETE
-        
-        #윤주님 레코드서비스
-      - id: record-service 
-        uri: lb://RECORD-SERVICE 
-        predicates:
-        - Path=/record-service/**   
->>>>>>> b8c36485186e309c3270234cc02b07635dc08c89
-        - Method=GET, POST, PUT, DELETE
-        
-        #종봉님 챗서비스
-      - id: chat-service #순서 2번
-        uri: lb://CHAT-SERVICE #순서 3번
-        predicates:
-        - Path=/chat-service/** #순서 1번   
-        - Method=GET, POST, PUT, DELETE
-        
-        #종봉님 이미지파일 서비스
-      - id: imgfile-service 
-        uri: lb://IMGFILE-SERVICE 
-        predicates:
-        - Path=/imgfile-service/**   
-        - Method=GET, POST, PUT, DELETE
-        
-        #은솔님 유저서비스
-      - id: user-service 
-        uri: lb://USER-SERVICE 
-        predicates:
-        - Path=/user-service/**   
-        - Method=GET, POST, PUT, DELETE
         
         #유정님 큐앤에이서비스     
       - id: qna-service 
@@ -142,7 +87,6 @@ spring:
         predicates:
         - Path=/record-service/**   
         - Method=GET, POST, PUT, DELETE
-
       
       
 eureka:
@@ -153,7 +97,4 @@ eureka:
     register-with-eureka: true 
     fetch-registry: true 
     service-url:
-      defaultZone: http://localhost:8761/eureka
-
-data:
-  SECRET_KEY: tj705team
+      defaultZone: http://localhost:8761/eureka 
