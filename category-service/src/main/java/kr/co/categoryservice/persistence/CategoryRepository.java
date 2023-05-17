@@ -1,4 +1,4 @@
-package kr.co.categoryservice.jpa;
+package kr.co.categoryservice.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

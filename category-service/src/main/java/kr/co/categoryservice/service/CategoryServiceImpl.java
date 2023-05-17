@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import kr.co.categoryservice.dto.CategoryDTO;
 import kr.co.categoryservice.dto.CategoryEntity;
 import kr.co.categoryservice.dto.CategoryResponse;
-import kr.co.categoryservice.jpa.CategoryRepository;
+import kr.co.categoryservice.persistence.CategoryRepository;
 
 
 @Service
