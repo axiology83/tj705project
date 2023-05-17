@@ -3,7 +3,10 @@ package kr.co.tj.qnaservice.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+<<<<<<< HEAD
 import kr.co.tj.qnaservice.persistence.QnaEntity;
+=======
+>>>>>>> b0db4c1e9951c59ddf634a5a09983b1f30746a06
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

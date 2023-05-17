@@ -1,6 +1,14 @@
 package kr.co.tj.qnaservice.controller;
 
+<<<<<<< HEAD
 import java.util.List;
+=======
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> b0db4c1e9951c59ddf634a5a09983b1f30746a06
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
