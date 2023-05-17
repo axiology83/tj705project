@@ -20,6 +20,7 @@ import kr.co.categoryservice.dto.CategoryEntity;
 import kr.co.categoryservice.dto.CategoryRequest;
 import kr.co.categoryservice.dto.CategoryResponse;
 import kr.co.categoryservice.service.CategoryService;
+import kr.co.categoryservice.service.CategoryServiceImpl;
 
 @RestController
 @RequestMapping("/category-service")

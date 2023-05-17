@@ -27,6 +27,7 @@ import kr.co.tj.boardservice.dto.BoardResponse;
 import kr.co.tj.boardservice.dto.CategoryResponse;
 import kr.co.tj.boardservice.feign.CategoryFeign;
 import kr.co.tj.boardservice.service.BoardService;
+import kr.co.tj.boardservice.service.BoardServiceImpl;
 
 @RestController
 @RequestMapping("/board-service")

@@ -1,4 +1,4 @@
-package kr.co.tj.boardservice.dto;
+package kr.co.tj.boardservice.persistence;
 
 import java.io.Serializable;
 import java.util.Date;

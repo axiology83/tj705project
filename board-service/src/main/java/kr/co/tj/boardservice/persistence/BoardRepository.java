@@ -1,12 +1,10 @@
-package kr.co.tj.boardservice.jpa;
+package kr.co.tj.boardservice.persistence;
 
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import kr.co.tj.boardservice.dto.BoardEntity;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long>{
 

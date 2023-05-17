@@ -2,6 +2,8 @@ package kr.co.tj.boardservice.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import kr.co.tj.boardservice.persistence.BoardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
