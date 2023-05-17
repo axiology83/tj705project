@@ -1,5 +1,6 @@
 package kr.co.tj.userservice.sec;
 
+import java.util.Base64;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,11 @@ public class TokenProvider {
 		
 		Date today = new Date(now);
 		Date expireDate = new Date(now + 1000*60*60*24);
+		String str = env.getProperty("data.SECRET_KEY");
+		String encodedStr = Base64.getEncoder().encodeToString(str.getBytes());
 		
 		return Jwts.builder()
-				.signWith(SignatureAlgorithm.HS512, env.getProperty("data.SECRET_KEY"))
+				.signWith(SignatureAlgorithm.HS512, encodedStr)
 				.setSubject(userEntity.getUsername())
 				.setIssuer("user-service")
 				.setIssuedAt(today)

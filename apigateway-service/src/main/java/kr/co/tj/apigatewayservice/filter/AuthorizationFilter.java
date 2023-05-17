@@ -1,5 +1,7 @@
 package kr.co.tj.apigatewayservice.filter;
 
+import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -70,8 +72,11 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 		boolean isValid = true;
 		String subject = null;
 		
+		String str = env.getProperty("data.SECRET_KEY");
+		String encodedStr = Base64.getEncoder().encodeToString(str.getBytes());
+		
 		try {
-			subject = Jwts.parser().setSigningKey(env.getProperty("data.SECRET_KEY"))
+			subject = Jwts.parser().setSigningKey(encodedStr)
 			.parseClaimsJws(token).getBody().getSubject();
 			
 		} catch (Exception e) {

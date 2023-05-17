@@ -17,6 +17,18 @@ spring:
             allowedMethods: POST, GET, PUT, DELETE
             
       routes:
+      
+      - id: user-service
+        uri: lb://USER-SERVICE
+        predicates:
+        - Path=/user-service/actuator/**
+        - Method=GET, POST
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+      
+      
+      
       #홍구님 보드 서비스
       - id: board-service
         uri: lb://BOARD-SERVICE
@@ -111,6 +123,12 @@ eureka:
     fetch-registry: true 
     service-url:
       defaultZone: http://localhost:8761/eureka
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
 
-data:
-  SECRET_KEY: tj705team
+#data:
+#  SECRET_KEY: tj705team
