@@ -17,11 +17,21 @@ spring:
             allowedMethods: POST, GET, PUT, DELETE
             
       routes:
-<<<<<<< HEAD
-        #홍구님 보드 서비스
-=======
+
+      
+      - id: user-service
+        uri: lb://USER-SERVICE
+        predicates:
+        - Path=/user-service/actuator/**
+        - Method=GET, POST
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+      
+      
+      
+
       #홍구님 보드 서비스
->>>>>>> b8c36485186e309c3270234cc02b07635dc08c89
       - id: board-service
         uri: lb://BOARD-SERVICE
         predicates:
@@ -40,8 +50,6 @@ spring:
         uri: lb://REVIEW-SERVICE 
         predicates:
         - Path=/review-service/**   
-<<<<<<< HEAD
-=======
         - Method=GET, POST, PUT, DELETE
         
         #종봉님 챗서비스
@@ -105,7 +113,6 @@ spring:
         uri: lb://RECORD-SERVICE 
         predicates:
         - Path=/record-service/**   
->>>>>>> b8c36485186e309c3270234cc02b07635dc08c89
         - Method=GET, POST, PUT, DELETE
         
         #종봉님 챗서비스
@@ -154,6 +161,12 @@ eureka:
     fetch-registry: true 
     service-url:
       defaultZone: http://localhost:8761/eureka
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
 
-data:
-  SECRET_KEY: tj705team
+#data:
+#  SECRET_KEY: tj705team
