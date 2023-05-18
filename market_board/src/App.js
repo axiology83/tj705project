@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import BoardDetail from './components/board/BoardDetail';
 import BoardInsert from './components/board/BoardInsert';
 
 
@@ -15,7 +17,7 @@ function App() {
     <Routes>
     
       <Route path='/' Component={BoardInsert} />
-      
+      <Route path='/detail/:id' Component={BoardDetail}/>
       
       
       
