@@ -6,7 +6,8 @@ spring:
     config:
       server:
        git:
-         uri: file:C:\\work\\git-repo
+         uri: https://github.com/axiology83/tj705teamyml.git
+         # uri: file:C:\\work\\git-repo
   application:
     name: config-service
 

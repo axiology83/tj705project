@@ -26,8 +26,9 @@ import kr.co.tj.userservice.dto.UserLoginRequest;
 import kr.co.tj.userservice.dto.UserRequest;
 import kr.co.tj.userservice.dto.UserResponse;
 import kr.co.tj.userservice.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/user-service")
 public class UserController {
@@ -155,6 +156,10 @@ public class UserController {
 	// 테스트용
 	@GetMapping("/health_check")
 	public String status() {
+		log.info("data.world: {}", env.getProperty("data.world"));
+		log.info("data.test: {}", env.getProperty("data.test"));
+		
+		
 		return "user service입니다" + env.getProperty("local.server.port");
 	}
 	
