@@ -75,6 +75,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 	 // 글 전체 목록 가져오는 코드
 	@Transactional
+	@Override
 	public List<BoardDTO> findAll() {
 		
 		List<BoardEntity> list_entity = boardRepository.findAll();
