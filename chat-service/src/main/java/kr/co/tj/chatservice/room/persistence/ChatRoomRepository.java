@@ -1,4 +1,4 @@
-package kr.co.tj.chatservice.room.jpa;
+package kr.co.tj.chatservice.room.persistence;
 
 import java.util.Optional;
 

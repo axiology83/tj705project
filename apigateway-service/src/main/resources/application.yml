@@ -28,6 +28,11 @@ spring:
         - RewritePath=/user-service/(?<segment>.*), /$\{segment}
       
       
+
+     
+       
+
+
       
       #홍구님 보드 서비스
       - id: board-service
@@ -49,6 +54,14 @@ spring:
         predicates:
         - Path=/review-service/**   
         - Method=GET, POST, PUT, DELETE
+        
+      - id: chat-service #순서 2번
+        uri: lb:ws://CHAT-SERVICE/ #순서 3번
+        predicates:
+        - Path=/chat-service/wsstomp #순서 1번   
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
         
         #종봉님 챗서비스
       - id: chat-service #순서 2번
