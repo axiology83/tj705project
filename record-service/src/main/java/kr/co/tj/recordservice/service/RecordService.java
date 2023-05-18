@@ -16,13 +16,13 @@ public class RecordService {
 	
 	public RecordDTO createRecord(RecordDTO recordDTO) {
 		
-		if(recordDTO.getHasChat()==null) {	// recordRequest로부터 가져온 recordDTO의 chat이 null이면 false 반환
-			recordDTO.setHasChat(false);
-		}
-		
-		if(recordDTO.getHasLike()==null) {  // recordRequest로부터 가져온 recordDTO의 like가 null이면 false 반환
-			recordDTO.setHasLike(false);
-		}
+//		 if(recordDTO.getHasChat()==null) {	// recordRequest로부터 가져온 recordDTO의 chat이 null이면 false 반환
+//			recordDTO.setHasChat(false);
+//		}
+//		
+//		 if(recordDTO.getHasLike()==null) {  // recordRequest로부터 가져온 recordDTO의 like가 null이면 false 반환
+//			recordDTO.setHasLike(false);
+//		}
 		
 		RecordEntity recordEntity=recordDTO.toRecordEntity();
 		

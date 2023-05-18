@@ -1,5 +1,6 @@
 package kr.co.tj.recordservice.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -11,18 +12,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BoardResponse {
-	private Long boardId; // 판매글의 아이디
-	private String seller; // 판메자의 닉네임
-	private String buyer; // 구매자의 닉네임
-	private Boolean hasChat; // 채팅 여부
-	private Boolean hasLike; // 찜 여부
+public class BoardResponse implements Serializable {
 	
-	private String reviewTitle; 	// 리뷰 작성 시 내용을 저장
-	private String reviewContent; 	// reviewEntity에서 삭제되어도 리뷰가 남아있을 수 있게 
-	private Float reviewRate;
-	private Date reviewCreateDate;
-	private Date reviewUpdateDate;
+	private static final long serialVersionUID = 1L;
 	
-	private StatusOfBoard status;
-}
+	private Long id;
+	private Long cid;
+	private String username;
+	private String title;
+	private String content;
+	private Date createDate;
+	private Date updateDate;
+	private Long readCnt;
+	private String cateName;
+} 

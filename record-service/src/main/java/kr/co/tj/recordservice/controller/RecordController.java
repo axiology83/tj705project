@@ -39,11 +39,11 @@ public class RecordController {
 	    }
 	}
 	
-	@PostMapping("/records/reviews") // reviewResponse를 받아와서 post
+	@PostMapping("/reviews") // reviewResponse를 받아와서 post // postman 입력 시 ReviewResponse의 변수를 사용해야한다.
 	public ResponseEntity<?> createRecords(@RequestBody ReviewResponse reviewResponse){
 		
-		Long boardId = reviewResponse.getBoardId();
-		String buyer = reviewResponse.getBuyer();
+		Long boardId = reviewResponse.getId();
+		String buyer = reviewResponse.getBuyerName();
 		
 		if(recordService.existsByBoardIdAndBuyer(boardId, buyer)) {  // boardId && buyer가 중복으로 있을 수 없게 하는 조건식 
 			return ResponseEntity.status(HttpStatus.CREATED).body("중복");
@@ -56,20 +56,14 @@ public class RecordController {
 		}
 	}
 	
-	@PostMapping("/records/boards") // boardResponse를 받아와서 post
+	@PostMapping("/boards") // boardResponse를 받아와서 post // postman 입력 시 BoardResponse의 변수를 사용해야한다.
 	public ResponseEntity<?> createRecords(@RequestBody BoardResponse boardResponse){
+
+		RecordDTO recordDTO=RecordDTO.toRecordDTO(boardResponse);
+		recordDTO=recordService.createRecord(recordDTO);
+		RecordResponse recordResponse=recordDTO.toRecordResponse();
 		
-		Long boardId = boardResponse.getBoardId();
-		String buyer = boardResponse.getBuyer();
-		
-		if(recordService.existsByBoardIdAndBuyer(boardId, buyer)) {  // boardId && buyer가 중복으로 있을 수 없게 하는 조건식 
-			return ResponseEntity.status(HttpStatus.CREATED).body("중복");
-		} else {
-			RecordDTO recordDTO=RecordDTO.toRecordDTO(boardResponse);
-			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
-			
-			return ResponseEntity.status(HttpStatus.CREATED).body(recordResponse);
-		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(recordResponse);
+	
 	}
 }
