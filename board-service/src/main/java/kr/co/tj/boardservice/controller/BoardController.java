@@ -74,31 +74,44 @@ public class BoardController {
 	
 	
 	// 검색기능
-	@GetMapping("/board/search")
-	public ResponseEntity<?> search(@RequestParam("pageNum") int pageNum, @RequestParam("keyword") String keyword) {
+		@GetMapping("/search")
+		public ResponseEntity<?> search(@RequestParam("pageNum") int pageNum, @RequestParam("keyword") String keyword) {
+			Map<String, Object> map = new HashMap<>();
+
+			try {
+				Page<BoardDTO> page = boardService.search(pageNum, keyword);
+				map.put("result", page);
+
+				return ResponseEntity.ok().body(map);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+				map.put("result", e.getMessage());
+				return ResponseEntity.badRequest().body(map);
+			}
+
+		}
+	// 페이징
+	@GetMapping("/list")
+	public ResponseEntity<?> list(Integer pageNum) {
+		Map<String, Object> map = new HashMap<>();
 		
-		
-		
+		if(pageNum == null) {
+			throw new RuntimeException("오류");
+		}
+
 		try {
-			Page<BoardDTO> page = boardService.search(pageNum, keyword);
-			
-			return ResponseEntity.status(HttpStatus.OK).body(page);
+			Page<BoardDTO> page = boardService.findAll(pageNum);
+			map.put("result", page);
+			System.out.println(page);
+			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {
+			
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.OK).body(" 오류");
+			map.put("result", "목록을 가져오는데 실패했습니다.");
+			return ResponseEntity.badRequest().body(map);
 		}
 	}
-	// 페이징
-	@GetMapping("/page/{page}")
-	public ResponseEntity<?> getpage(@PathVariable("page") Integer page) {
-		
-		
-		page = page -1 ;
-		Pageable pageable = PageRequest.of(page, 10);
-		List<BoardResponse> list = boardService.getPage(pageable);
-			
-			return ResponseEntity.status(HttpStatus.OK).body(list);
-		}
 	
 	// 수정
 	 @PutMapping("/update")
@@ -206,6 +219,7 @@ public class BoardController {
 			  boardRequest.setUsername("m001");
 		    boardRequest.setTitle("제목 " + i);   // 글의 제목
 		    boardRequest.setContent("내용 " + i);  // 글의 내용
+		    boardRequest.setCid(2L); // cid 값 고정
 		    
 		    BoardDTO boardDTO = BoardDTO.toBoardDTO(boardRequest);
 		    

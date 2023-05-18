@@ -28,6 +28,29 @@
   color: #61dafb;
 }
 
+.mymy{
+  border-style: solid;
+  border-color: #ffffff;
+  border-radius: 15px;
+  border-width: 1px;
+  padding: 0.35em;
+  background-color: rgb(0, 0, 0);
+  margin: 15px 5px;
+  color: white;
+
+}
+
+.mymy2{
+  border-style: solid;
+  border-color: #010c0f;
+  border-radius: 15px;
+  border-width: 2px;
+  padding: 0.35em;
+  margin: 15px 5px;
+  
+  
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

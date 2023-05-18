@@ -74,17 +74,18 @@ public class BoardServiceImpl implements BoardService {
 		return BoardDTO.toBoardDTO(entity);
 	}
 	 // 글 전체 목록 가져오는 코드
-	@Override
+	@Transactional
 	public List<BoardDTO> findAll() {
 		
-		List<BoardEntity> list = boardRepository.findAll();
-		List<BoardDTO> dtoList = new ArrayList<>();
+		List<BoardEntity> list_entity = boardRepository.findAll();
+		List<BoardDTO> list_dto = new ArrayList<>();
 		
-		for(BoardEntity entity : list) {
-			dtoList.add(BoardDTO.toBoardDTO(entity));
+		for(BoardEntity x : list_entity) {
+			list_dto.add(BoardDTO.toBoardDTO(x));
 		}
 		
-		return dtoList;
+		
+		return list_dto;
 	}
 	// 삭제
 	@Override
@@ -154,11 +155,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 	// 검색 관련코드
 	@Override
-	public Page<BoardDTO> search(int pageNum, String keyword) {
+	public Page<BoardDTO> search(int page, String keyword) {
 		List<Sort.Order> sortList = new ArrayList<>();
 		sortList.add(Sort.Order.desc("id"));
 		
-		Pageable pageable = PageRequest.of(pageNum, 10, Sort.by(sortList));
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(sortList));
 				
 		Page<BoardEntity> page_board = boardRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
 		 
