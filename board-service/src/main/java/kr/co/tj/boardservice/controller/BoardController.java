@@ -187,6 +187,8 @@ public class BoardController {
 	  
 	 BoardDTO boardDTO = BoardDTO.toBoardDTO(boardRequest);
 	  
+	 
+	 
 	 boardDTO = boardService.createBoard(boardDTO);
 	  
 	 BoardResponse boardResponse = boardDTO.toBoardResponse();

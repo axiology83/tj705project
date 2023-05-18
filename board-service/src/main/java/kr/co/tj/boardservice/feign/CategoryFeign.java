@@ -18,6 +18,8 @@ import kr.co.tj.boardservice.dto.CategoryResponse;
 @FeignClient(name = "category-service")
 public interface CategoryFeign {
 	
+	
+	
 	@GetMapping("category-service/category/name")
 	public CategoryResponse getNameByCid(Long cid) ;
 	

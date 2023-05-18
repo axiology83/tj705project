@@ -38,7 +38,7 @@ function BoardInsert() {
     })
   }, [])
 
-    
+    /////////////////////////////////////////
 
     const onClickHandler = () => {
       const htmlstr = editor.current.getEditor().root.innerHTML;
@@ -51,16 +51,18 @@ function BoardInsert() {
       formData.append('filename', file.name);
   
       try {
-        const response = await fetch('http://localhost:9007/imgService/uploadImg', {
+        const response = await fetch('http://localhost:51320/imgfile-service/uploadimg', {
           method: 'POST',
           body: formData,
         });
         const data = await response.json();
-        return `http://localhost:9007/imgService/getImg?id=${data.result.id}`;
+        return `http://localhost:51320/imgfile-service/getimgdata?id=${data.result}`;
       } catch (error) {
         console.log(error);
       }
     };
+
+    ///////////////////////////////////////////
   
     const imageHandler = () => {
       const quillEditor = editor.current.getEditor();
