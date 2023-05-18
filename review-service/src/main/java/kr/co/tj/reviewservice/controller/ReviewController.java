@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.tj.reviewservice.dto.RecordResponse;
 import kr.co.tj.reviewservice.dto.ReviewDTO;
 import kr.co.tj.reviewservice.dto.ReviewRequest;
 import kr.co.tj.reviewservice.dto.ReviewResponse;
+import kr.co.tj.reviewservice.feign.RecordFeign;
 import kr.co.tj.reviewservice.service.ReviewService;
 
 @RestController
@@ -30,9 +32,17 @@ import kr.co.tj.reviewservice.service.ReviewService;
 
 public class ReviewController {
 
-	@Autowired
 	private ReviewService reviewService;
+	private RecordFeign recordFeign;
 	
+	@Autowired
+	public ReviewController(ReviewService reviewService, RecordFeign recordFeign) {
+		super();
+		this.reviewService = reviewService;
+		this.recordFeign = recordFeign;
+	}
+
+
 
 	// 페이징 구현
 	@GetMapping("/page/{page}")
@@ -90,10 +100,7 @@ public class ReviewController {
 	// 리뷰 입력
 	@PostMapping("/create")
 	public ResponseEntity<?> create(@RequestBody ReviewRequest reviewRequest) {
-		System.out.println(reviewRequest);
-		System.out.println(reviewRequest);
-		System.out.println(reviewRequest);
-		System.out.println(reviewRequest);
+		
 		if (reviewRequest.getBuyerName() == null || reviewRequest.getSellerId() == null
 				|| reviewRequest.getTitle() == null || reviewRequest.getContent() == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력된 값이 모두 채워지지 않았습니다.");
@@ -102,9 +109,15 @@ public class ReviewController {
 		ReviewDTO dto = ReviewDTO.toReviewDTOreq(reviewRequest);
 
 		dto = reviewService.createReview(dto);
-
+		
 		ReviewResponse reviewResponse = dto.toReviewResponse();
-
+		
+		RecordResponse res = recordFeign.createRecords(reviewResponse);
+		System.out.println(res);
+		System.out.println(res);
+		System.out.println(res);
+		System.out.println(res);
+		System.out.println(res);
 		return ResponseEntity.status(HttpStatus.CREATED).body(reviewResponse);
 	}
 
