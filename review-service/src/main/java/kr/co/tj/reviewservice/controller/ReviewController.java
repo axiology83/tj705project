@@ -90,7 +90,10 @@ public class ReviewController {
 	// 리뷰 입력
 	@PostMapping("/create")
 	public ResponseEntity<?> create(@RequestBody ReviewRequest reviewRequest) {
-
+		System.out.println(reviewRequest);
+		System.out.println(reviewRequest);
+		System.out.println(reviewRequest);
+		System.out.println(reviewRequest);
 		if (reviewRequest.getBuyerName() == null || reviewRequest.getSellerId() == null
 				|| reviewRequest.getTitle() == null || reviewRequest.getContent() == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("입력된 값이 모두 채워지지 않았습니다.");

@@ -3,6 +3,8 @@ package kr.co.tj.reviewservice.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Lob;
+
 import kr.co.tj.reviewservice.persistence.ReviewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
