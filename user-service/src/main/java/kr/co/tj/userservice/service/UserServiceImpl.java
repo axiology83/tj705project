@@ -17,7 +17,7 @@ import kr.co.tj.userservice.dto.UserRole;
 import kr.co.tj.userservice.jpa.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
 
@@ -64,13 +64,15 @@ public class UserServiceImpl implements UserService{
 
 		// 비밀번호 암호화
 		userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-		
-		 // Role 설정
-	    if (userEntity.getUsername().equals("m1000")) {
-	        userEntity.setRole(UserRole.TYPE2); // 회원 m1000의 경우 admin 권한 부여
-	    } else {
-	        userEntity.setRole(UserRole.TYPE1); // 기본적으로 TYPE1 권한 설정
-	    }
+
+		// Role 설정
+		if (userEntity.getUsername().equals("m1000")) {
+			userEntity.setRole(UserRole.TYPE2); // 회원 m1000의 경우 admin 권한 부여 (임의)
+		} else if (userEntity.getUsername().equals("b001")) {
+			userEntity.setRole(UserRole.TYPE3); // 회원 b001의 경우 TYPE3 권한 설정 (임의)
+		} else {
+			userEntity.setRole(UserRole.TYPE1); // 기본적으로 TYPE1 권한 설정
+		}
 
 		userEntity = userRepository.save(userEntity);
 
