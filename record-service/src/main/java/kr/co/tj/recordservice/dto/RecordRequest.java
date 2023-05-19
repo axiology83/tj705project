@@ -27,6 +27,7 @@ public class RecordRequest {
 	private Date boardCreateDate;
 	private Date boardUpdateDate;
 	
+	private Long reviewId;
 	private String reviewTitle; 	// 리뷰 작성 시 내용을 저장
 	private String reviewContent; 	// reviewEntity에서 삭제되어도 리뷰가 남아있을 수 있게 
 	private Float rate;

@@ -16,21 +16,21 @@ import kr.co.tj.recordservice.dto.RecordDTO;
 import kr.co.tj.recordservice.dto.RecordRequest;
 import kr.co.tj.recordservice.dto.RecordResponse;
 import kr.co.tj.recordservice.dto.ReviewResponse;
-import kr.co.tj.recordservice.service.RecordServiceImpl;
+import kr.co.tj.recordservice.service.RecordService;
 
 @RestController
 @RequestMapping("/record-service")
 public class RecordController {
-
+	
 	@Autowired
-	private RecordServiceImpl recordServiceImpl;
+	private RecordService recordService;
 	
 	@PostMapping("/records") // record에 직접 post
 	public ResponseEntity<?> createRecords(@RequestBody RecordRequest recordRequest){
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(recordRequest);
-			recordDTO=recordServiceImpl.createRecord(recordDTO);
+			recordDTO=recordService.createRecord(recordDTO);
 			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
 			map.put("result", recordResponse);
@@ -51,7 +51,7 @@ public class RecordController {
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(boardResponse);
-			recordDTO=recordServiceImpl.createRecord(recordDTO);
+			recordDTO=recordService.createRecord(recordDTO);
 			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
 			map.put("result", recordResponse);
@@ -73,9 +73,19 @@ public class RecordController {
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(reviewResponse);
-			recordDTO=recordServiceImpl.createRecord(recordDTO);
+			recordDTO=recordService.createRecord(recordDTO);
 			RecordResponse recordResponse=recordDTO.toRecordResponse();
-			
+			Long bid=reviewResponse.getBid();
+			RecordDTO boardDTOInRecordDTO=recordService.findFirstByBoardId(bid);
+			RecordDTO addRecordDTO=RecordDTO.boardRecordWithRecordDTO(boardDTOInRecordDTO);
+			recordResponse.setCateId(addRecordDTO.getCateId());
+			recordResponse.setCateName(addRecordDTO.getCateName());
+			recordResponse.setBoardTitle(addRecordDTO.getBoardTitle());
+			recordResponse.setBoardContent(addRecordDTO.getBoardContent());
+			recordResponse.setStatus(addRecordDTO.getStatus());
+			// recordResponse.setBoardCreateDate(addRecordDTO.getBoardCreateDate());
+			recordResponse.setBoardUpdateDate(addRecordDTO.getBoardUpdateDate());
+			recordResponse.setBoardCnt(addRecordDTO.getBoardCnt());
 			map.put("result", recordResponse);
 			
 			return ResponseEntity.ok().body(map);
@@ -87,13 +97,14 @@ public class RecordController {
 			return ResponseEntity.badRequest().body(map);
 		}
 	}
+	
 	@PutMapping("/records") // record에 put한 것을 create
 	public ResponseEntity<?> createUpdateRecords(@RequestBody RecordRequest recordRequest){
 		
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(recordRequest);
-			recordDTO=recordServiceImpl.createRecord(recordDTO);
+			recordDTO=recordService.createRecord(recordDTO);
 			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
 			map.put("result", recordResponse);
@@ -115,7 +126,7 @@ public class RecordController {
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(boardResponse);
-			recordDTO=recordServiceImpl.createRecord(recordDTO);
+			recordDTO=recordService.createRecord(recordDTO);
 			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
 			map.put("result", recordResponse);
@@ -136,9 +147,19 @@ public class RecordController {
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(reviewResponse);
-			recordDTO=recordServiceImpl.createRecord(recordDTO);
+			recordDTO=recordService.createRecord(recordDTO);
 			RecordResponse recordResponse=recordDTO.toRecordResponse();
-			
+			Long bid=reviewResponse.getBid();
+			RecordDTO boardDTOInRecordDTO=recordService.findFirstByBoardId(bid);
+			RecordDTO addRecordDTO=RecordDTO.boardRecordWithRecordDTO(boardDTOInRecordDTO);
+			recordResponse.setCateId(addRecordDTO.getCateId());
+			recordResponse.setCateName(addRecordDTO.getCateName());
+			recordResponse.setBoardTitle(addRecordDTO.getBoardTitle());
+			recordResponse.setBoardContent(addRecordDTO.getBoardContent());
+			recordResponse.setStatus(addRecordDTO.getStatus());
+			// recordResponse.setBoardCreateDate(addRecordDTO.getBoardCreateDate());
+			recordResponse.setBoardUpdateDate(addRecordDTO.getBoardUpdateDate());
+			recordResponse.setBoardCnt(addRecordDTO.getBoardCnt());
 			map.put("result", recordResponse);
 			
 			return ResponseEntity.ok().body(map);

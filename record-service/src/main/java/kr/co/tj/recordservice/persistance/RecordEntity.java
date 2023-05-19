@@ -3,7 +3,6 @@ package kr.co.tj.recordservice.persistance;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,28 +29,20 @@ public class RecordEntity implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id; // record의 아이디
 	
-	// @Column(nullable =false)
 	private Long cateId;
 	
-	// @Column(nullable =false)
 	private String cateName;
 	
-	@Column(nullable =false)
 	private Long boardId; // 판매글의 아이디
 	
-	@Column(nullable =false)
-	private String seller; // 판메자의 닉네임 // feign 때문에 변수 통일
+	private String seller; // 판메자의 닉네임 
 	
-	// @Column(nullable =false)
 	private String buyer; // 구매자의 닉네임
 	
-	// @Column(nullable =false)
 	private String boardTitle;
 	
-	// @Column(nullable =false)
 	private String boardContent;
 	
-	// @Column(nullable =false)
 	private Long boardCnt;
 
 	private Boolean hasChat; // 채팅 여부
@@ -62,6 +53,7 @@ public class RecordEntity implements Serializable{
 	private Date boardCreateDate;
 	private Date boardUpdateDate;
 	
+	private Long reviewId;
 	private String reviewTitle; 	// 리뷰 작성 시 내용을 저장
 	private String reviewContent; 	// reviewEntity에서 삭제되어도 리뷰가 남아있을 수 있게 
 	private Float rate;

@@ -34,6 +34,7 @@ public class RecordDTO implements Serializable{
 	private Date boardCreateDate;
 	private Date boardUpdateDate;
 	
+	private Long reviewId;
 	private String reviewTitle; 	// 리뷰 작성 시 내용을 저장
 	private String reviewContent; 	// reviewEntity에서 삭제되어도 리뷰가 남아있을 수 있게 
 	private Float rate;
@@ -43,7 +44,39 @@ public class RecordDTO implements Serializable{
 	
 	private Float sellerRateAvg;
 
-	public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
+	public static RecordDTO toRecordDTO(RecordEntity recordEntity) {
+		
+		return RecordDTO.builder()
+				
+				.cateId(recordEntity.getCateId())
+				.cateName(recordEntity.getCateName())
+				
+				.boardId(recordEntity.getBoardId())
+				.seller(recordEntity.getSeller())
+				.buyer(recordEntity.getBuyer())
+				.boardTitle(recordEntity.getBoardTitle())
+				.boardContent(recordEntity.getBoardContent())
+				.boardCnt(recordEntity.getBoardCnt())
+				// .hasChat(recordRequest.getHasChat())
+				// .hasLike(recordRequest.getHasLike())
+				.status(recordEntity.getStatus())
+				.boardCreateDate(recordEntity.getBoardCreateDate())
+				.boardUpdateDate(recordEntity.getBoardUpdateDate())
+				
+				.reviewId(recordEntity.getReviewId())
+				.reviewTitle(recordEntity.getReviewTitle())
+				.reviewContent(recordEntity.getReviewContent())
+				.rate(recordEntity.getRate())
+				.reviewCnt(recordEntity.getReviewCnt())
+				.reviewCreateDate(recordEntity.getReviewCreateDate())
+				.reviewUpdateDate(recordEntity.getReviewUpdateDate())
+				
+				.sellerRateAvg(recordEntity.getSellerRateAvg())
+				
+				.build();
+	}
+	
+public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 		
 		return RecordDTO.builder()
 				
@@ -62,6 +95,7 @@ public class RecordDTO implements Serializable{
 				.boardCreateDate(recordRequest.getBoardCreateDate())
 				.boardUpdateDate(recordRequest.getBoardUpdateDate())
 				
+				.reviewId(recordRequest.getReviewId())
 				.reviewTitle(recordRequest.getReviewTitle())
 				.reviewContent(recordRequest.getReviewContent())
 				.rate(recordRequest.getRate())
@@ -73,6 +107,7 @@ public class RecordDTO implements Serializable{
 				
 				.build();
 	}
+
 
 	public RecordResponse toRecordResponse() {
 
@@ -92,6 +127,7 @@ public class RecordDTO implements Serializable{
 				.boardCreateDate(boardCreateDate)
 				.boardUpdateDate(boardUpdateDate)
 				
+				.reviewId(reviewId)
 				.reviewTitle(reviewTitle)
 				.reviewContent(reviewContent)
 				.rate(rate)
@@ -121,11 +157,12 @@ public class RecordDTO implements Serializable{
 				.status(status)
 				.boardCreateDate(boardCreateDate)
 				.boardUpdateDate(boardUpdateDate)
+				
+				.reviewId(reviewId)
 				.reviewCnt(reviewCnt)
 				.reviewTitle(reviewTitle)
 				.reviewContent(reviewContent)
 				.rate(rate)
-				
 				.reviewCreateDate(reviewCreateDate)
 				.reviewUpdateDate(reviewUpdateDate)
 				
@@ -136,10 +173,12 @@ public class RecordDTO implements Serializable{
 
 	public static RecordDTO toRecordDTO(ReviewResponse reviewResponse) {
 		return RecordDTO.builder()
-				.boardId(reviewResponse.getId())
+				
+				.boardId(reviewResponse.getBid())
 				.seller(reviewResponse.getSellerId())
 				.buyer(reviewResponse.getBuyerName())
 				
+				.reviewId(reviewResponse.getId())
 				.reviewTitle(reviewResponse.getTitle())
 				.reviewContent(reviewResponse.getContent())
 				.rate(reviewResponse.getRate())
@@ -166,6 +205,24 @@ public class RecordDTO implements Serializable{
 				.boardCreateDate(boardResponse.getCreateDate())
 				.boardUpdateDate(boardResponse.getUpdateDate())
 				.boardCnt(boardResponse.getReadCnt())
+				
+				.build();
+	}
+	
+	public static RecordDTO boardRecordWithRecordDTO(RecordDTO recordDTO) {
+		return RecordDTO.builder()
+				
+				.cateId(recordDTO.getCateId())
+				.cateName(recordDTO.getCateName())
+				
+				.boardTitle(recordDTO.getBoardTitle())
+				.boardContent(recordDTO.getBoardContent())
+				// .hasChat(boardResponse.getHasChat())
+				// .hasLike(boardResponse.getHasLike())
+				// .status(boardResponse.getStatus())
+				.boardCreateDate(recordDTO.getBoardCreateDate())
+				.boardUpdateDate(recordDTO.getBoardUpdateDate())
+				.boardCnt(recordDTO.getBoardCnt())
 				
 				.build();
 	}
