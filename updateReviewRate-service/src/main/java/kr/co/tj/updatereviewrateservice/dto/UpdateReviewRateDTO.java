@@ -19,8 +19,10 @@ public class UpdateReviewRateDTO implements Serializable {
 
 	private String sellerId;
 
-	private int count;
-
 	private float rate;
+	
+	private float averageRate;
+	private float minRate;
+	private float maxRate;
 
 }
