@@ -1,4 +1,4 @@
-package kr.co.tj.recordservice.dto;
+package kr.co.tj.recordservice.persistance;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import kr.co.tj.recordservice.dto.StatusOfBoard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

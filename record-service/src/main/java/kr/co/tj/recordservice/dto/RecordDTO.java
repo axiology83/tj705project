@@ -3,6 +3,7 @@ package kr.co.tj.recordservice.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import kr.co.tj.recordservice.persistance.RecordEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -156,6 +157,7 @@ public class RecordDTO implements Serializable{
 				.cateName(boardResponse.getCateName())
 				
 				.boardId(boardResponse.getId())
+				.boardTitle(boardResponse.getTitle())
 				.seller(boardResponse.getUsername())
 				.boardContent(boardResponse.getContent())
 				// .hasChat(boardResponse.getHasChat())
