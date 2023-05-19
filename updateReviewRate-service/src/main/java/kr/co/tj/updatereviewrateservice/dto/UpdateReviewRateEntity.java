@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "updateReviewsRate")
+@Table(name = "updatereviewsrate")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,6 +30,9 @@ public class UpdateReviewRateEntity implements Serializable{
 	
 	@Column(nullable = false)
 	private String sellerId;
+	
+	@Column(nullable = false)
+	private Long rid; // review게시글의 고유 id
 	
 	@Column(nullable = false)
 	private float rate;

@@ -16,6 +16,8 @@ public class RateDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String sellerId;
+	
+	private Long rid;
 
 	private float rate;
 	
@@ -24,6 +26,7 @@ public class RateDTO implements Serializable {
 	public UpdateReviewRateEntity toReviewEntity() {
 		return UpdateReviewRateEntity.builder()
 				.sellerId(sellerId)
+				.rid(rid)
 				.rate(rate)
 				.count(count)
 				.build();

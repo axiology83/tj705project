@@ -18,6 +18,8 @@ public class UpdateReviewRateDTO implements Serializable {
 	private Long id;
 
 	private String sellerId;
+	
+	private Long rid;
 
 	private float rate;
 	
