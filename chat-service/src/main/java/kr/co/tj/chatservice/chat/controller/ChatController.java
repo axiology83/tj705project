@@ -15,7 +15,7 @@ import kr.co.tj.chatservice.chat.dto.ChatMessageDTO;
 
 
 
-@Controller
+@Controller 
 public class ChatController {
 	
 	@Autowired

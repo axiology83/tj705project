@@ -1,5 +1,5 @@
 server:
-  port: 0 # port번호를 지정하지 않고 사용할 수 있는 port번호를 임의로 설정해라. 0번을 쓰겠다는 말이 아님!
+  port: 9000 # port번호를 지정하지 않고 사용할 수 있는 port번호를 임의로 설정해라. 0번을 쓰겠다는 말이 아님!
   
 spring:
   application:
@@ -25,14 +25,14 @@ spring:
     show-sql: true
     generate-ddl: true
       
-eureka:
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    register-with-eureka: true # 유레카 서버에 등록하라.
-    fetch-registry: true # 주기적으로 다른 인스턴스 데이터를 받아와서 갱신하라.
-    service-url:
-      defaultZone: http://localhost:8761/eureka # 유레카 서버의 주소
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true 
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka 
 
 

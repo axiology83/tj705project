@@ -4,6 +4,7 @@ package kr.co.tj.chatservice.room.persistence;
 
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,8 +26,16 @@ import lombok.NoArgsConstructor;
 public class ChatRoomEntity {
 	
 	@Id
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(unique = true)
+	private String title;
+	
+	@Column(unique = true)
 	private String username1;
+	
+	@Column(unique = true)
 	private String username2;
 	
 	@Lob
