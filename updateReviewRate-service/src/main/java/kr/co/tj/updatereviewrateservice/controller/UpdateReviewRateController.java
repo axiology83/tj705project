@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.tj.updatereviewrateservice.dto.RateDTO;
-import kr.co.tj.updatereviewrateservice.service.UpdateReviewRateService;
+import kr.co.tj.updatereviewrateservice.service.UpdateReviewRateServiceImpl;
 
 @RestController
 @RequestMapping("updateReviewRate-service")
 public class UpdateReviewRateController {
 
 	@Autowired
-	private UpdateReviewRateService updateReviewRateService;
+	private UpdateReviewRateServiceImpl updateReviewRateService;
 
 	@Autowired
 	private Environment env;
