@@ -34,8 +34,6 @@ public class UpdateReviewRateEntity implements Serializable{
 	@Column(nullable = false)
 	private float rate;
 	
-	private float averageRate;
-	private float minRate;
-	private float maxRate;
+	private int count;
 
 }

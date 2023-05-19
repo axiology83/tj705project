@@ -1,12 +1,13 @@
 package kr.co.tj.updatereviewrateservice.service;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.tj.updatereviewrateservice.dto.RateDTO;
-import kr.co.tj.updatereviewrateservice.dto.RateStatsDTO;
 import kr.co.tj.updatereviewrateservice.dto.UpdateReviewRateEntity;
 import kr.co.tj.updatereviewrateservice.jpa.UpdateReviewRateRepository;
 
@@ -15,52 +16,47 @@ public class UpdateReviewRateService {
 	
 	@Autowired
 	private UpdateReviewRateRepository updateReviewRateRepository;
-
+	
 	// 별점 입력
 	public void leaveRate(String sellerId, RateDTO rateDto) {
-		// 새로운 ReviewEntity 생성 후 저장
-		UpdateReviewRateEntity newEntity = new UpdateReviewRateEntity();
-
-		newEntity.setSellerId(sellerId);
-		newEntity.setRate(rateDto.getRate());
-
-		updateReviewRateRepository.save(newEntity);
+	    // sellerId를 기준으로 RateEntity를 검색
+	    Optional<UpdateReviewRateEntity> entity = updateReviewRateRepository.findBySellerId(sellerId);
+	    
+	    if(entity.isPresent()) {
+	        // sellerId에 별점이 이미 존재할 경우, rate와 count를 업데이트
+	        UpdateReviewRateEntity rateEntity = entity.get();
+	        // 총 별점에 새로운 별점을 더함
+	        rateEntity.setRate(rateEntity.getRate() + rateDto.getRate());
+	        // 별점 입력시 count 1씩 추가
+	        rateEntity.setCount(rateEntity.getCount()+1);
+	        updateReviewRateRepository.save(rateEntity);
+	    } else {
+	        // 존재하지 않는 경우, 새로운 Entity 생성 후 저장
+	        UpdateReviewRateEntity newEntity = new UpdateReviewRateEntity();
+	        newEntity.setSellerId(sellerId);
+	        newEntity.setRate(rateDto.getRate()); // 첫 별점을 저장
+	        newEntity.setCount(1); // count의 초기값을 1로 설정
+	        
+	        updateReviewRateRepository.save(newEntity);
+	    }
 	}
-
-	// 별점 통계
-	public RateStatsDTO getRateStats(String sellerId) {
-		List<UpdateReviewRateEntity> reviews = updateReviewRateRepository.findAllBySellerId(sellerId);
-
-		// 별점의 합계
-		float sum = 0;
-
-		// 별점의 최솟값
-		float min = Float.MAX_VALUE;
-
-		// 별점의 최댓값
-		float max = Float.MIN_VALUE;
-
-		for (UpdateReviewRateEntity review : reviews) {
-			float rate = review.getRate();
-			sum += rate;
-
-			if (rate < min) {
-				min = rate;
-			}
-
-			if (rate > max) {
-				max = rate;
-			}
-		}
-
-		// 평균 별점
-		float avg = sum / reviews.size();
-
-		RateStatsDTO stats = new RateStatsDTO();
-		stats.setAverageRate(avg);
-		stats.setMinRate(min);
-		stats.setMaxRate(max);
-
-		return stats;
+	
+	// 평균 별점
+	public Map<String, Object> getAverageRateAndCount(String sellerId) {
+		// sellerId를 기준으로 RateEntity를 검색
+	    Optional<UpdateReviewRateEntity> entity = updateReviewRateRepository.findBySellerId(sellerId);
+	    
+	    if(entity.isPresent()) {
+	        UpdateReviewRateEntity rateEntity = entity.get();
+	        Map<String, Object> result = new HashMap<>();
+	        // 별점 평균값 계산 (총 별점 합계 / 총 count)
+	        result.put("averageRate", (float) rateEntity.getRate() / rateEntity.getCount());
+	        // 총 count 반환
+	        result.put("count", rateEntity.getCount());
+	        return result;
+	    } else {
+	        // 별점 정보가 없는 경우, 예외처리
+	        throw new RuntimeException("아직" + sellerId + "의 별점정보가 없슴니다. ");
+	    }
 	}
 }

@@ -21,8 +21,5 @@ public class UpdateReviewRateDTO implements Serializable {
 
 	private float rate;
 	
-	private float averageRate;
-	private float minRate;
-	private float maxRate;
-
+	private int count;
 }

@@ -18,11 +18,14 @@ public class RateDTO implements Serializable {
 	private String sellerId;
 
 	private float rate;
+	
+	private int count;
 
 	public UpdateReviewRateEntity toReviewEntity() {
 		return UpdateReviewRateEntity.builder()
 				.sellerId(sellerId)
 				.rate(rate)
+				.count(count)
 				.build();
 	}
 
