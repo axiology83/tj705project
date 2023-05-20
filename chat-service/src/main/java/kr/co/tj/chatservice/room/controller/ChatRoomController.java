@@ -3,16 +3,13 @@ package kr.co.tj.chatservice.room.controller;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.jsonwebtoken.Jwts;
 import kr.co.tj.chatservice.room.dto.ChatRoomDTO;
 import kr.co.tj.chatservice.room.dto.ChatRoomRequest;
+import kr.co.tj.chatservice.room.dto.ChatRoomResponse;
 import kr.co.tj.chatservice.room.service.ChatRoomService;
 
 @RestController
@@ -30,7 +28,7 @@ public class ChatRoomController {
 
 	private Environment env;
 	private ChatRoomService chatRoomService;
-	
+
 	@Autowired
 	public ChatRoomController(Environment env, ChatRoomService chatRoomService) {
 		super();
@@ -38,73 +36,95 @@ public class ChatRoomController {
 		this.chatRoomService = chatRoomService;
 	}
 
+	// 채팅방 생성 시도.
+	// RequestBody에 ChatRoomRequest를 받는 것 뿐만 아니라,
+	// RequestHeader에서 Authorization을 key로 하는 value인 {Bearer Token}을 받아옴.
+	// token을 디코딩해서 username을 추출할 것임.
+	
+	@PostMapping("/enter")
+	public ResponseEntity<?> insert(@RequestHeader("Authorization") String bearerToken,
+			@RequestBody ChatRoomRequest chatRoomRequest) {
 
-
-	// 채팅방 생성
-	@PostMapping("/insert")
-	public ResponseEntity<?> insert(@RequestHeader("Authorization") String bearerToken, @RequestBody ChatRoomRequest chatRoomRequest) {
-				
-		// 헤더에서 
+		// 헤더의 토큰을 활용하여, 현재 대화를 시도하고 있는 사용자의 username을 username1으로 반환 받음
 		String token = bearerToken.replace("Bearer ", "");
-		String str = env.getProperty("data.SECRET_KEY");
-		
-		String encodedStr = Base64.getEncoder().encodeToString(str.getBytes());
-		
+		String secKey = env.getProperty("data.SECRET_KEY");
+		String encodedSecKey = Base64.getEncoder().encodeToString(secKey.getBytes());
+
 		String username1 = Jwts.parser()
-				.setSigningKey(encodedStr)
+				.setSigningKey(encodedSecKey)
 				.parseClaimsJws(token)
 				.getBody()
 				.getSubject();
-		
+
 		String username2 = chatRoomRequest.getUsername2();
+
+		String[] users = { username1, username2 };
+		Arrays.sort(users);
+		username1 = users[0];
+		username2 = users[1];
+		String title = username1 + "-" + username2;
+
+		Map<String, Object> map = chatRoomService.findByTitle(title);
+
+		if (map == null) {
+			Map<String, ChatRoomResponse> responseMap = new HashMap<>();
+			ChatRoomDTO dto = ChatRoomDTO.builder()
+					.title(title)
+					.username1(username1)
+					.username2(username2)
+					.build();
+
+			dto = chatRoomService.insertRoom(dto);
+			
+			ChatRoomResponse response = ChatRoomResponse.builder()
+					.title(dto.getTitle())
+					.username1(dto.getUsername1())
+					.username2(dto.getUsername2())
+					.build();
+			responseMap.put("roomInfo", response);
+
+			return ResponseEntity.ok().body(responseMap);	
+
+		}
 		
-		
-		    String[] users = { username1, username2 };
-	        Arrays.sort(users);
-	        username1 = users[0];
-	        username2 = users[1];
-	        String title = username1 + "-" + username2;
-	        
-	        
-	        chatRoomRequest.setUsername1(username1);
-	        chatRoomRequest.setUsername2(username2);
-	        chatRoomRequest.setTitle(title);
-		
-		
-		
-		ChatRoomDTO dto = ChatRoomDTO.builder()
-				.title(title)
-				.username1(username1)
-				.username2(username2)
+		ChatRoomDTO dto = (ChatRoomDTO)map.get("roomInfo");
+		ChatRoomResponse response = ChatRoomResponse.builder()
+				.title(dto.getTitle())
+				.username1(dto.getUsername1())
+				.username2(dto.getUsername2())
 				.build();
 		
-		chatRoomService.insertRoom(dto);
-		
-		
+		map.put("roomInfo", response);			
 
-		return ResponseEntity.ok().body("채팅방이 생성되었슴돠");
+		return ResponseEntity.ok().body(map);
+
+
+		
 	}
 
 	
-
-//	@GetMapping("/list")
-//	public ResponseEntity<?> findChatrooms() {
-//		Map<String, Object> map = new HashMap<>();
-//
-//		List<ChatRoomDTO> dtolist = chatRoomService.findAll();
-//
-//		map.put("result", dtolist);
-//
-//		return ResponseEntity.ok().body(map);
-//	}
-//
-//	@GetMapping("/room/{roomId}")
-//	public ResponseEntity<?> findRoom(@PathVariable String roomId) {
-//		Map<String, Object> map = new HashMap<>();
-//		ChatRoomDTO dto = chatRoomService.findRoom(roomId);
-//		map.put("result", dto);
-//
-//		return ResponseEntity.ok().body(map);
-//	}
+	
+	
+	
+	
+	
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> delete(@RequestBody ChatRoomRequest chatRoomRequest){
+		
+		String title = chatRoomRequest.getTitle();
+		String result;
+		
+		try {
+			result = chatRoomService.delete(title);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 채팅방이 존재하지 않습니다");
+			
+		}
+		
+		return ResponseEntity.ok().body(result);
+	}
 
 }

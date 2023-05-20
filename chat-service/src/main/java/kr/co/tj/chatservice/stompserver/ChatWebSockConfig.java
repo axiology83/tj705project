@@ -1,4 +1,4 @@
-package kr.co.tj.chatservice.chat.stompserver;
+package kr.co.tj.chatservice.stompserver;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

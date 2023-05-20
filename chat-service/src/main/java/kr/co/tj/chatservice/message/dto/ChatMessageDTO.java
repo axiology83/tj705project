@@ -1,5 +1,7 @@
-package kr.co.tj.chatservice.chat.dto;
+package kr.co.tj.chatservice.message.dto;
 
+
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,16 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ChatMessageDTO{
-	
-	
-	
-	public enum MessageType {
-		ENTER, TALK
-	}
-	
-	private MessageType type;
-	private String roomId;
+				
+	private String roomTitle;
+	private Date sendAt; 
 	private String sender;
-	private String talk;
+	private String receiver;
+	private String message;
 
 }

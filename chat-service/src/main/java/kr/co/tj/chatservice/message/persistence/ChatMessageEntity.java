@@ -1,11 +1,8 @@
-package kr.co.tj.chatservice.room.persistence;
+package kr.co.tj.chatservice.message.persistence;
 
-
-
-
+import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,26 +13,32 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "chatroom")
-public class ChatRoomEntity {
-	
+@Builder
+@Table(name = "chatMessage")
+public class ChatMessageEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
-	private String title;
+	@Column(nullable = false)
+	private String roomTitle;
 	
-	private String username1;
+	@Column(nullable = false)
+	private Date sendAt;
 	
-	private String username2;
+	@Column(nullable = false)
+	private String sender;
 	
-		
-
-
+	@Column(nullable = false)
+	private String receiver;
+	
+	@Column(nullable = false)
+	private String message;
+	
+	
+	
 }

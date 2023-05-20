@@ -23,7 +23,7 @@ public class ChatRoomDTO {
 	private String title;
 	private String username1;
 	private String username2;
-	private String content;
+	
 
 
 }

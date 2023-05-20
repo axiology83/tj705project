@@ -34,27 +34,28 @@ spring:
 
 
       
-      #홍구님 보드 서비스
+      # board-service
       - id: board-service
         uri: lb://BOARD-SERVICE
         predicates:
         - Path=/board-service/** #유저가 브라우저 주소창에 http://localhost:8000/user-service/users 입력 user-service를 보고 id를 확인하고 uri로 넘어감
         - Method=GET, POST, PUT, DELETE
         
-        #홍구님 카테고리서비스
+      # category-service
       - id: category-service #순서 2번
         uri: lb://CATEGORY-SERVICE #순서 3번
         predicates:
         - Path=/category-service/** #순서 1번   
         - Method=GET, POST, PUT, DELETE
         
-        # 정호님 리뷰서비스
+      # review-service
       - id: review-service 
         uri: lb://REVIEW-SERVICE 
         predicates:
         - Path=/review-service/**   
         - Method=GET, POST, PUT, DELETE
-        
+      
+      # chat-service 
       - id: chat-service #순서 2번
         uri: lb:ws://CHAT-SERVICE/ #순서 3번
         predicates:
@@ -63,7 +64,7 @@ spring:
         - RemoveRequestHeader=Cookie
         - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
         
-        #종봉님 챗서비스
+      
       - id: chat-service #순서 2번
         uri: lb://CHAT-SERVICE #순서 3번
         predicates:
