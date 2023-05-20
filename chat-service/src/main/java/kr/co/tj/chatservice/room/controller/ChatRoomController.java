@@ -64,10 +64,10 @@ public class ChatRoomController {
 		username2 = users[1];
 		String title = username1 + "-" + username2;
 
-		Map<String, Object> map = chatRoomService.findByTitle(title);
+		Map<String, Object> map = chatRoomService.enter(title);
 
 		if (map == null) {
-			Map<String, ChatRoomResponse> responseMap = new HashMap<>();
+			Map<String, Object> responseMap = new HashMap<>();
 			ChatRoomDTO dto = ChatRoomDTO.builder()
 					.title(title)
 					.username1(username1)
@@ -81,6 +81,7 @@ public class ChatRoomController {
 					.username1(dto.getUsername1())
 					.username2(dto.getUsername2())
 					.build();
+			responseMap.put("isExist", false);
 			responseMap.put("roomInfo", response);
 
 			return ResponseEntity.ok().body(responseMap);	
@@ -94,7 +95,8 @@ public class ChatRoomController {
 				.username2(dto.getUsername2())
 				.build();
 		
-		map.put("roomInfo", response);			
+		map.put("roomInfo", response);
+		map.put("isExist", true);
 
 		return ResponseEntity.ok().body(map);
 

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,18 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 	
 	private SimpMessageSendingOperations messagingTemplate;
 	private ChatMessageRepository chatMessageRepository;
+	
+	@Autowired
+	public ChatMessageServiceImpl(
+			SimpMessageSendingOperations messagingTemplate,
+			ChatMessageRepository chatMessageRepository) {
+		
+		super();
+		this.messagingTemplate = messagingTemplate;
+		this.chatMessageRepository = chatMessageRepository;
+	}
+
+
 	
 	@Override
 	@Transactional

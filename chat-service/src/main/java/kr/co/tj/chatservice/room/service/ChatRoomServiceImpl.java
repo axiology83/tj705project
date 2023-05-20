@@ -52,7 +52,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	// 대화내용을 포함한 dto객체를 반환하고
 	// 존재하지 않을 경우, null을 반환함.
 	@Override
-	public Map<String, Object> findByTitle(String title) {
+	public Map<String, Object> enter(String title) {
 		Optional<ChatRoomEntity> optional = chatRoomRepository.findByTitle(title);
 
 		if (!optional.isPresent()) {

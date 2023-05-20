@@ -10,7 +10,7 @@ public interface ChatRoomService {
 
 	ChatRoomDTO insertRoom(ChatRoomDTO dto);
 
-	Map<String, Object> findByTitle(String title);
+	Map<String, Object> enter(String title);
 
 	String delete(String title);
 
