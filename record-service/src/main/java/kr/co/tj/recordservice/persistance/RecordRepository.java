@@ -8,4 +8,6 @@ public interface RecordRepository extends JpaRepository<RecordEntity, Long>{
 
 	Optional<RecordEntity> findFirstByBoardId(Long bid);
 
+	RecordEntity findById(String id);
+
 }

@@ -1,10 +1,12 @@
 package kr.co.tj.recordservice.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +26,44 @@ public class RecordController {
 	
 	@Autowired
 	private RecordService recordService;
+	
+	@GetMapping("/records")
+	public ResponseEntity<?> findAll(){
+		Map<String, Object> map=new HashMap<>();
+		List<RecordResponse> list = recordService.findAll();
+
+		if (list.isEmpty()) {
+			map.put("result","record의 list가 존재하지 않습니다.");
+			
+			return ResponseEntity.badRequest().body(map);
+		}
+		else {
+			try {
+				map.put("result", list);
+				return ResponseEntity.ok().body(map);
+			} catch (Exception e) {
+				e.printStackTrace();
+				map.put("result","record의 list가 존재하지 않습니다.");
+				
+				return ResponseEntity.badRequest().body(map);
+			}
+		}
+	}
+	
+	@GetMapping("/records/{id}")
+	public ResponseEntity<?> findById(String id){
+		Map<String, Object> map=new HashMap<>();
+		try {
+			RecordDTO dto=recordService.findById(id);
+			map.put("result", dto);
+			return ResponseEntity.ok().body(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("result","record가 존재하지 않습니다.");
+			return ResponseEntity.badRequest().body(map);
+		}
+		
+	}
 	
 	@PostMapping("/records") // record에 직접 post
 	public ResponseEntity<?> createRecords(@RequestBody RecordRequest recordRequest){

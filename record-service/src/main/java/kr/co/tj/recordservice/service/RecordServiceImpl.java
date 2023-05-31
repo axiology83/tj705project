@@ -1,11 +1,15 @@
 package kr.co.tj.recordservice.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Optional;
 
 import kr.co.tj.recordservice.dto.RecordDTO;
+import kr.co.tj.recordservice.dto.RecordResponse;
 import kr.co.tj.recordservice.persistance.RecordEntity;
 import kr.co.tj.recordservice.persistance.RecordRepository;
 
@@ -44,4 +48,21 @@ public class RecordServiceImpl implements RecordService{
 		
 		return RecordDTO.toRecordDTO(entity);
 	}
+	
+
+	@Override
+	public List<RecordResponse> findAll() {
+		List<RecordEntity> list_entity = recordRepository.findAll();
+		List<RecordResponse> list_response = new ArrayList<>();
+		
+		for (RecordEntity x : list_entity) {
+			list_response.add(RecordDTO.toRecordResponse(x));
+		}
+		return list_response;
+	}
+	
+	public RecordDTO findById(String id) {
+		RecordEntity entity=recordRepository.findById(id);
+		return RecordDTO.toRecordDTO(entity);
+	};
 }

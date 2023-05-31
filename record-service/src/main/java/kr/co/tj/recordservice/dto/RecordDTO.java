@@ -47,7 +47,7 @@ public class RecordDTO implements Serializable{
 	public static RecordDTO toRecordDTO(RecordEntity recordEntity) {
 		
 		return RecordDTO.builder()
-				
+				.id(recordEntity.getId())
 				.cateId(recordEntity.getCateId())
 				.cateName(recordEntity.getCateName())
 				
@@ -76,10 +76,9 @@ public class RecordDTO implements Serializable{
 				.build();
 	}
 	
-public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
+	public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 		
 		return RecordDTO.builder()
-				
 				.cateId(recordRequest.getCateId())
 				.cateName(recordRequest.getCateName())
 				
@@ -112,6 +111,7 @@ public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 	public RecordResponse toRecordResponse() {
 
 		return RecordResponse.builder()
+				.id(id)
 				.cateId(cateId)
 				.cateName(cateName)
 				
@@ -143,6 +143,7 @@ public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 	public RecordEntity toRecordEntity() {
 		// TODO Auto-generated method stub
 		return RecordEntity.builder()
+				.id(id)
 				.cateId(cateId)
 				.cateName(cateName)
 				
@@ -173,7 +174,6 @@ public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 
 	public static RecordDTO toRecordDTO(ReviewResponse reviewResponse) {
 		return RecordDTO.builder()
-				
 				.boardId(reviewResponse.getBid())
 				.seller(reviewResponse.getSellerId())
 				.buyer(reviewResponse.getBuyerName())
@@ -191,7 +191,6 @@ public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 
 	public static RecordDTO toRecordDTO(BoardResponse boardResponse) {
 		return RecordDTO.builder()
-				
 				.cateId(boardResponse.getCid())
 				.cateName(boardResponse.getCateName())
 				
@@ -211,7 +210,7 @@ public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 	
 	public static RecordDTO boardRecordWithRecordDTO(RecordDTO recordDTO) {
 		return RecordDTO.builder()
-				
+				.id(recordDTO.getId())
 				.cateId(recordDTO.getCateId())
 				.cateName(recordDTO.getCateName())
 				
@@ -223,6 +222,37 @@ public static RecordDTO toRecordDTO(RecordRequest recordRequest) {
 				.boardCreateDate(recordDTO.getBoardCreateDate())
 				.boardUpdateDate(recordDTO.getBoardUpdateDate())
 				.boardCnt(recordDTO.getBoardCnt())
+				
+				.build();
+	}
+	public static RecordResponse toRecordResponse(RecordEntity recordEntity) {
+		
+		return RecordResponse.builder()
+				.id(recordEntity.getId())
+				.cateId(recordEntity.getCateId())
+				.cateName(recordEntity.getCateName())
+				
+				.boardId(recordEntity.getBoardId())
+				.seller(recordEntity.getSeller())
+				.buyer(recordEntity.getBuyer())
+				.boardTitle(recordEntity.getBoardTitle())
+				.boardContent(recordEntity.getBoardContent())
+				.boardCnt(recordEntity.getBoardCnt())
+				// .hasChat(recordRequest.getHasChat())
+				// .hasLike(recordRequest.getHasLike())
+				.status(recordEntity.getStatus())
+				.boardCreateDate(recordEntity.getBoardCreateDate())
+				.boardUpdateDate(recordEntity.getBoardUpdateDate())
+				
+				.reviewId(recordEntity.getReviewId())
+				.reviewTitle(recordEntity.getReviewTitle())
+				.reviewContent(recordEntity.getReviewContent())
+				.rate(recordEntity.getRate())
+				.reviewCnt(recordEntity.getReviewCnt())
+				.reviewCreateDate(recordEntity.getReviewCreateDate())
+				.reviewUpdateDate(recordEntity.getReviewUpdateDate())
+				
+				.sellerRateAvg(recordEntity.getSellerRateAvg())
 				
 				.build();
 	}

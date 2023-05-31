@@ -1,0 +1,29 @@
+
+.chatInputElement {
+display: flex;
+}
+  .chatMessageBox {
+    border-style: solid;
+    border-color: rgb(0, 92, 184);
+    border-radius: 5%;
+    border-width: 1px;
+  
+    width: 400px;
+    height: 400px;
+    margin: 30px auto;
+    padding: 3% 5%;
+    overflow-y: scroll;
+    display: flex;
+  }
+
+  .chatMessage{
+    border-style: solid;
+    border-color: rgb(71, 71, 71);
+    
+    border-width: 0.5px;
+
+    margin: 5px auto;
+
+    padding: 3% 5%;
+  }
+
