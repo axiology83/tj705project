@@ -15,7 +15,7 @@ export function fetchFn(method, url, dto, additionalOptions = {}) {
   return fetch(url, options)
     .then((res) => {
       if (res.status === 403) {
-        alert("접근 방식이 잘못되었습니다.");
+        console.log("접근 방식이 잘못되었습니다.");
       }
 
       if (!res.ok) {

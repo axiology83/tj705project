@@ -31,21 +31,21 @@
 .user {
   border: 1px solid #ccc;
   padding: 10px;
-  margin: 10px;
+  margin: 30px;
   border-radius: 5px;
 }
 
-.review {
+.user-review {
   border: 1px solid #ccc;
   padding: 10px;
-  margin: 10px;
+  margin: 30px;
   border-radius: 5px;
 }
 
-.board {
+.user-board {
   border: 1px solid #ccc;
   padding: 10px;
-  margin: 10px;
+  margin: 30px;
   border-radius: 5px;
 }
 
@@ -56,4 +56,40 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.star-left-full {
+  width: 10px;
+  height: 25px;
+  border: 0px;
+  background-image: url(./components/review/왼꽉.png);
+  background-size: cover;
+  background-color: transparent;
+}
+
+.star-left-empty {
+  width: 10px;
+  height: 25px;
+  border: 0px;
+  background-image: url(./components/review/왼빈.png);
+  background-size: cover;
+  background-color: transparent;
+}
+
+.star-right-full {
+  width: 10px;
+  height: 25px;
+  border: 0px;
+  background-image: url(./components/review/오꽉.png);
+  background-size: cover;
+  background-color: transparent;
+}
+
+.star-right-empty {
+  width: 10px;
+  height: 25px;
+  border: 0px;
+  background-image: url(./components/review/오빈.png);
+  background-size: cover;
+  background-color: transparent;
 }

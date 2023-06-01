@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { fetchFn } from '../NetworkUtils';
 import moment from 'moment';
+import Button from 'react-bootstrap/Button';
+import ShowAverageRate from './ShowAverageRate';
+import Table from 'react-bootstrap/Table';
+import ShowRate from './ShowRate';
 
+// 등록된 별점이 없을 경우 콘솔창에 에러메세지가 뜸.
+// 별점을 등록하면 에러메세지가 사라지니 무시해도 됨.
 function UserProfile() {
     const username = useParams().username;
     const sellerId = useParams().username;
@@ -13,8 +19,10 @@ function UserProfile() {
     const role = localStorage.getItem("ROLE");
     const [reviews, setReviews] = useState([]);
     const [boards, setBoards] = useState([]);
+    const [showAllReviews, setShowAllReviews] = useState(false); // 리뷰 펼치기 상태
+    const [showAllBoards, setShowAllBoards] = useState(false); // 보드 펼치기 상태
 
-    // 회원의 프로필을 불러옴(추후 게시판과 연동해 회원 이름 클릭시 프로필로 이동하게 하는 코드 추가)
+    // 회원의 프로필을 불러옴
     useEffect(() => {
         fetchFn("GET", `http://localhost:8000/user-service/profile/${username}`, null, {
             headers: { Authorization: `Bearer ${token}` },
@@ -73,6 +81,14 @@ function UserProfile() {
 
     }, [token, username, sellerId]);
 
+    const handleClickToggleReviews = () => {
+        setShowAllReviews(!showAllReviews); // 리뷰 펼치기 상태 토글
+    };
+
+    const handleClickToggleBoards = () => {
+        setShowAllBoards(!showAllBoards); // 보드 펼치기 상태 토글
+    };
+
     // 블락당한 user는 상세보기 기능 이용 불가.
     if (role === 'TYPE3') {
         return (
@@ -93,51 +109,83 @@ function UserProfile() {
                         <p>가입일 : {moment(user.createAt).format("YYYY-MM-DD HH:mm:ss")}</p>
                         {averageRate !== null ? (
                             <div className='rate'>
-                                <p>평균 별점 : {averageRate.averageRate} </p>
-                                <p>받은 별점 개수 : {averageRate.count} </p>
+                                {/* ShowAverageRate부분을 <p>로 감싸면 <div> 요소가 <p> 요소의 하위 요소로 사용될 수 없다는 에러가 뜸 */}
+                                [ 평균 별점 ] <ShowAverageRate averageRate={averageRate.averageRate} />
+                                <p>별점 받은 횟수 : {averageRate.count} 번</p>
                             </div>
                         ) : (
                             <div className='rate'>
                                 <p>아직 받은 별점이 없습니다.</p>
                             </div>
                         )}
+                        <div>
+                            {role === 'TYPE2' && (
+                                <Link to={"/user/listPaging"}><Button variant="primary">회원목록</Button></Link>
+                            )}
+                            {LOGINER === user.username && (
+                                <Link to={`/user/update/${username}`}> <Button variant="warning">수정</Button></Link>
+                            )}
+                            {(LOGINER === user.username || role === 'TYPE2') && (
+                                <Link to={`/user/delete/${username}`}> <Button variant="danger">삭제</Button></Link>
+                            )}
+                        </div>
                     </div>
 
-                    <div>
-                        {role === 'TYPE2' && (
-                        <Link to={"/user/listPaging"}>[ 회원목록 ]</Link>
-                        )}
-                        {LOGINER === user.username && (
-                            <Link to={`/user/update/${username}`}>[ 수정 ]</Link>
-                        )}
-                        {(LOGINER === user.username || role === 'TYPE2') && (
-                            <Link to={`/user/delete/${username}`}>[ 삭제 ]</Link>
-                        )}
+                    {/* 전체 가운데 맞춤 */}
+                    <div className='user-review' style={{ textAlign: 'center' }}>
+                        <h4>상품 리뷰</h4>
+                        <br />
+                        {/* 표 모양 부트스트랩 코드 사용 */}
+                        <Table striped bordered hover size="sm">
+                            <thead>
+                                <tr>
+                                    {/* 비율로 칸 넓이 조정 */}
+                                    <th style={{ width: '35%' }}>제목</th>
+                                    <th>구매자</th>
+                                    <th style={{ width: '45%' }}>별점</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* 처음 보일때 한번에 5개의 데이터만 보임. 토글을 열면 전체 데이터 보임. */}
+                                {reviews.slice(0, showAllReviews ? reviews.length : 5).map((review) => (
+                                    <tr key={review.id}>
+                                        {/* 추후 review-front와 합칠때 조정. 양옆위아래 가운데 맞춤 */}
+                                        <td style={{ verticalAlign: 'middle' }}><Link to={`/review/detail/${review.id}`}>{review.title}</Link></td>
+                                        <td style={{ verticalAlign: 'middle' }}><Link to={`/user/profile/${review.buyerName}`}>{review.buyerName}</Link></td>
+                                        <td style={{ verticalAlign: 'middle' }}><ShowRate rate={review.rate} /></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                        {/* 버튼 부트스트랩 코드 사용. 토글 열고 닫기 가능 */}
+                        <Button onClick={handleClickToggleReviews} variant="outline-dark">{showAllReviews ? '닫기' : '전체보기'}</Button>
                     </div>
 
-                    <div className='review'>
-                        <h4>상품 리뷰</h4><br />
-                        {reviews.map((review) => (
-                            <div key={review.id}>
-                                {/* 추후 review-service 프론트와 연동 */}
-                                <p>제목 : <Link to={`/review/detail/${review.id}`}>{review.title}</Link></p>
-                                <p>내용 : {review.content}</p>
-                                <p>구매자 : {review.buyerName}</p><br />
-                            </div>
-                        ))}
+                    <div className='user-board' style={{ textAlign: 'center' }}>
+                        <h4>게시글</h4>
+                        <br />
+                        <Table striped bordered hover size="sm">
+                            <thead>
+                                <tr>
+                                    <th>제목</th>
+                                    <th>카테고리</th>
+                                    <th>조회수</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {boards.slice(0, showAllBoards ? boards.length : 5).map((board) => (
+                                    <tr key={board.id}>
+                                        {/* 추후 board-front와 합칠때 조정  */}
+                                        <td style={{ verticalAlign: 'middle' }}><Link to={`/board/detail/${board.id}`}>{board.title}</Link></td>
+                                        <td style={{ verticalAlign: 'middle' }}>{board.cateName}</td>
+                                        <td style={{ verticalAlign: 'middle' }}>{board.readCnt}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                        <Button onClick={handleClickToggleBoards} variant="outline-dark">{showAllBoards ? '닫기' : '전체보기'}</Button>
                     </div>
 
-                    <div className='board'>
-                        <h4>판매&구매글</h4><br />
-                        {boards.map((board) => (
-                            <div key={board.id}>
-                                {/* 추후 board-service 프론트와 연동 */}
-                                <p>제목 : <Link to={`/board/detail/${board.id}`}>{board.title}</Link></p>
-                                <p>내용 : {board.content}</p>
-                                <p>조회수 : {board.readCnt}</p><br />
-                            </div>
-                        ))}
-                    </div>
                 </>
             )}
         </div>

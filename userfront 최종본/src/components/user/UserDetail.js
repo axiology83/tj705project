@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { fetchFn } from '../NetworkUtils';
 import { Link, useParams } from 'react-router-dom';
 import moment from 'moment'; // npm install moment
+import Button from 'react-bootstrap/Button';
 
 function UserDetail() {
   const username = useParams().username;
@@ -62,18 +63,23 @@ function UserDetail() {
           </div>
 
           <div>
-            <Link to={"/user/listPaging"}>[ 회원목록 ]</Link>
+            {/* 모두에게 보임 */}
+            <Link to={"/user/listPaging"}><Button variant="primary">회원목록</Button></Link>
+            {/* 본인일때만 보임 */}
             {LOGINER === user.username && (
-              <Link to={`/user/update/${username}`}>[ 수정 ]</Link>
+              <Link to={`/user/update/${username}`}> <Button variant="warning">수정</Button></Link>
             )}
+            {/* 본인이거나 관리자이면 보임 */}
             {(LOGINER === user.username || role === 'TYPE2') && (
-              <Link to={`/user/delete/${username}`}>[ 삭제 ]</Link>
+              <Link to={`/user/delete/${username}`}> <Button variant="danger">삭제</Button></Link>
             )}
+            {/* 관리자이면 보임 */}
             {(role === 'TYPE2') && (
-              <Link to={`/user/role/${username}`}>[ 권한 ]</Link>
+              <Link to={`/user/role/${username}`}> <Button variant="success">권한</Button></Link>
             )}
+            {/* 본인이 아닐때만 보임 */}
             {LOGINER !== user.username && (
-              <Link to={`/user/login`}>[ 로그인 ]</Link>
+              <Link to={`/user/login`}> <Button variant="dark">로그인</Button></Link>
             )}
 
           </div>

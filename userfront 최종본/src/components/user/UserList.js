@@ -3,6 +3,7 @@ import { fetchFn } from '../NetworkUtils';
 import UserComp from './UserComp';
 import { Table, Pagination } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 // UserListSerch에서 검색한 가입일로 찾은 회원 목록
 function UserList({ startDate, endDate, users: initialUsers }) {
@@ -63,24 +64,24 @@ function UserList({ startDate, endDate, users: initialUsers }) {
 
     // ex) 현재 페이지가 5이고 최대 페이지가 10이면, startPage는 5 - (10 / 2) = 5 - 5 = 0
     // ex) 현재 페이지가 5이고 최대 페이지가 10이면, endPage는 5 + (10 / 2) = 5 + 5 = 10
-  
+
     let displayPages = [];
 
-     // 총 페이지 수가 최대 표시 페이지 수 이하일 때, 1부터 totalPages까지의 숫자 배열 생성
-        if (totalPages <= maxPageDisplay) {
-            displayPages = [...Array(totalPages).keys()].map(i => i + 1);
-    
-            // 시작 페이지가 1보다 작거나 같을 때, 1부터 maxPageDisplay까지의 숫자 배열 생성
-        } else if (startPage <= 1) {
-            displayPages = [...Array(maxPageDisplay).keys()].map(i => i + 1);
-    
-            // 끝 페이지가 totalPages보다 크거나 같을 때, (totalPages - maxPageDisplay + 1)부터 totalPages까지의 숫자 배열 생성
-        } else if (endPage >= totalPages) {
-            displayPages = [...Array(maxPageDisplay).keys()].map(i => totalPages - maxPageDisplay + i + 1);
-            // 위의 경우에 해당하지 않을 때, startPage부터 startPage + maxPageDisplay - 1까지의 숫자 배열 생성
-        } else {
-            displayPages = [...Array(maxPageDisplay).keys()].map(i => startPage + i);
-        }
+    // 총 페이지 수가 최대 표시 페이지 수 이하일 때, 1부터 totalPages까지의 숫자 배열 생성
+    if (totalPages <= maxPageDisplay) {
+        displayPages = [...Array(totalPages).keys()].map(i => i + 1);
+
+        // 시작 페이지가 1보다 작거나 같을 때, 1부터 maxPageDisplay까지의 숫자 배열 생성
+    } else if (startPage <= 1) {
+        displayPages = [...Array(maxPageDisplay).keys()].map(i => i + 1);
+
+        // 끝 페이지가 totalPages보다 크거나 같을 때, (totalPages - maxPageDisplay + 1)부터 totalPages까지의 숫자 배열 생성
+    } else if (endPage >= totalPages) {
+        displayPages = [...Array(maxPageDisplay).keys()].map(i => totalPages - maxPageDisplay + i + 1);
+        // 위의 경우에 해당하지 않을 때, startPage부터 startPage + maxPageDisplay - 1까지의 숫자 배열 생성
+    } else {
+        displayPages = [...Array(maxPageDisplay).keys()].map(i => startPage + i);
+    }
 
     return (
         <div>
@@ -97,13 +98,13 @@ function UserList({ startDate, endDate, users: initialUsers }) {
                         </thead>
                         <tbody>
                             {localUsers && localUsers.length > 0 ? (
-                                localUsers.map((user, index) => (
-                                    <tr key={index}>
-                                        <UserComp user={user} />
-                                    </tr>
-                                ))
+                                localUsers.map(user =>
+                                    <UserComp key={user.id} user={user} />
+                                )
                             ) : (
-                                <p>아직 회원이 존재하지 않습니다.</p>
+                                <tr>
+                                    <td colSpan="3">아직 회원이 존재하지 않습니다.</td>
+                                </tr>
                             )}
                         </tbody>
                     </Table>
@@ -122,7 +123,7 @@ function UserList({ startDate, endDate, users: initialUsers }) {
             ) : (
                 <p>관리자만 접근이 가능합니다.</p>
             )}
-            <Link to={"/"}>[HOME]</Link>
+            <Link to={"/"}><Button variant="outline-dark">HOME</Button></Link>
         </div>
     );
 }

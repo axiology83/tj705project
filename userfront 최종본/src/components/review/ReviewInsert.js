@@ -1,49 +1,85 @@
-import React, { useEffect, useState } from 'react'
-import { fetchFn } from '../NetworkUtils'
+import React, { useState } from "react";
+import "react-quill/dist/quill.snow.css";
+import GetRate from "./GetRate";
+import Quill from "./Quill";
+import { fetchFn } from "../NetworkUtils";
 
-// 테스트를 위해 임의로 만들어 둠. 추후 삭제 예정
 function ReviewInsert() {
-    const [reviews, setReviews] = useState([])
+  const [qeditor, setQeditor] = useState();
+  const [score, setScore] = useState();
 
-    function onSubmitHandler(e) {
-        e.preventDefault()
+  const uploadImgCallBack = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("filename", file.name);
 
-        const formData = new FormData(e.target)
-        const sellerId = formData.get('sellerId')
-        const buyerName = formData.get('buyerName')
-        const title = formData.get('title')
-        const content = formData.get('content')
-        const rate = formData.get('rate')
-        const count = formData.get('count')
-
-        const dto = {
-            sellerId,
-            buyerName,
-            title,
-            content,
-            rate
+    try {
+      const response = await fetch(
+        "http://localhost:8000/imgfile-service/uploadimg",
+        {
+          method: "POST",
+          body: formData,
         }
-        fetchFn("POST", "http://localhost:8000/review-service/create", dto)
-        .then(data => {
-            console.log(data)
-        })
+      );
+      const data = await response.json();
+      return `http://localhost:8000/imgfile-service/getimgdata?id=${data.result}`;
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  const imageHandler = () => {
+    const quillEditor = qeditor.current.getEditor();
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      const url = await uploadImgCallBack(file);
+      const range = quillEditor.getSelection(true);
+      quillEditor.insertEmbed(range.index, "image", url);
+    };
+  };
+
+  function onClick(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const title = formData.get("title");
+    const content = qeditor.current.getEditor().root.innerHTML;
+    const dto = {
+      sellerId: "test",
+      buyerName: "buyer1",
+      title,
+      content,
+      rate: score,
+    };
+    fetchFn("POST", "http://localhost:8000/review-service/create", dto).then(
+      (data) => {
+        console.log(data);
+      }
+    );
+  }
 
   return (
     <div>
-        <h2>리뷰 작성</h2>
-        
-        <form action='#' onSubmit={onSubmitHandler}>
-            판매자 : <input name='sellerId'/><br/>
-            구매자 : <input name='buyerName'/><br/>
-            제목 : <input name='title'/><br/>
-            내용 : <input name='content'/><br/>
-            별점 : <input name='rate'/><br/>
-            <button>작성완료</button>
-        </form>
-        
+      <GetRate parentStateFunction={setScore} />
+      <form action="#" onSubmit={onClick}>
+        <br /> <br /> <br />
+        제목
+        <input
+          style={{ fontSize: "30px" }}
+          name="title"
+          placeholder="제목을 입력하세요"
+        />
+        <br />
+        <button>작성완료!</button>
+        <Quill fn={setQeditor} />
+      </form>
     </div>
-  )
+  );
 }
 
-export default ReviewInsert
+export default ReviewInsert;

@@ -1,5 +1,10 @@
 import React from 'react'
 import { fetchFn } from '../NetworkUtils';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function UserInsert() {
 
@@ -38,13 +43,51 @@ function UserInsert() {
     <div>
       <h2>회원가입</h2>
 
-      <form action="#" onSubmit={onSubmitHandler}>
-        닉네임: <input name='username' /><br />
-        이름: <input name='name' /><br />
-        비밀번호: <input name='password' /><br />
-        비밀번호 확인: <input name='password2' /><br />
-        <button>가입완료</button>
-      </form>
+      <Form onSubmit={onSubmitHandler}>
+        <br />
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="formUsername">
+                <Form.Control name='username' type="text" placeholder="닉네임" />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="formName">
+                <Form.Control name='name' type="text" placeholder="이름" />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="formPassword">
+                <Form.Control name='password' type="password" placeholder="비밀번호" />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="formPassword2">
+                <Form.Control name='password2' type="password" placeholder="비밀번호 확인" />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Container>
+
+        <Button variant="primary" type="submit">가입완료</Button>
+      </Form>
+      
     </div>
   )
 }

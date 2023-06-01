@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { fetchFn } from '../NetworkUtils';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function UserUpdate() {
     const { username } = useParams();
@@ -85,23 +90,59 @@ function UserUpdate() {
                     <h2>프로필 수정</h2>
                     {user !== null && (
                         <>
-                            <form action="#" onSubmit={onSubmitHandler}>
-                                아이디 : <input value={user.username} disabled />
+                            <form onSubmit={onSubmitHandler}>
+                                <Container>
+                                    <Row className="justify-content-md-center">
+                                        <Col xs={12} md={6}>
+                                            <Form.Group className="mb-3" controlId="formUsername">
+                                                <Form.Control name='username' type="text" placeholder="아이디" value={user.username} disabled />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Container>
+
+                                <Container>
+                                    <Row className="justify-content-md-center">
+                                        <Col xs={12} md={6}>
+                                            <Form.Group className="mb-3" controlId="formName">
+                                                <Form.Control name='name' type="text" placeholder="이름" value={user.name} onInput={onInputHandler} />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Container>
+
+                                <Container>
+                                    <Row className="justify-content-md-center">
+                                        <Col xs={12} md={6}>
+                                            <Form.Group className="mb-3" controlId="formOrgPassword">
+                                                <Form.Control name='orgPassword' type="password" placeholder="기존 비밀번호" />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Container>
+
+                                <Container>
+                                    <Row className="justify-content-md-center">
+                                        <Col xs={12} md={6}>
+                                            <Form.Group className="mb-3" controlId="formPassword">
+                                                <Form.Control name='password' type="password" placeholder="새 비밀번호" />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Container>
+
+                                <Container>
+                                    <Row className="justify-content-md-center">
+                                        <Col xs={12} md={6}>
+                                            <Form.Group className="mb-3" controlId="formPassword2">
+                                                <Form.Control name='password2' type="password" placeholder="새 비밀번호 확인" />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Container>
                                 <br />
-                                닉네임 :{" "}
-                                <input
-                                    name="name"
-                                    value={user.name}
-                                    onInput={onInputHandler}
-                                />
-                                <br />
-                                기존 비밀번호 : <input name="orgPassword" />
-                                <br />
-                                새 비밀번호 : <input name="password" />
-                                <br />
-                                비밀번호 확인 : <input name="password2" />
-                                <br />
-                                <button>수정 완료</button>
+                                <Button variant="warning" type="submit">수정완료</Button>
+                                <Link to={`/user/profile/${username}`}> <Button variant="primary">취소</Button></Link>
                             </form>
                         </>
                     )}

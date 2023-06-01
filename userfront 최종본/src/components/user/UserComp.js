@@ -7,11 +7,11 @@ function UserComp(props) {
   const user = props.user;
 
   return (
-    <>
-      <td>{user.name}</td>
-      <td><Link to={`/user/detail/${user.username}`}> {user.username}</Link></td>
-      <td> {moment(user.createAt).format("YYYY-MM-DD HH:mm:ss")}</td>
-    </>
+    <tr key={user.id}>
+      <td><span>{user.name}</span></td>
+      <td><span><Link to={`/user/detail/${user.username}`}> {user.username}</Link></span></td>
+      <td><span>{moment(user.createAt).format("YYYY-MM-DD HH:mm:ss")}</span></td>
+    </tr>
   )
 }
 

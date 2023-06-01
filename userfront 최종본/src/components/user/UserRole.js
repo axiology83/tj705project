@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { fetchFn } from '../NetworkUtils';
+import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function UserRole() {
     const { username } = useParams();
@@ -39,21 +41,35 @@ function UserRole() {
         })
     }
 
+    const handleSelect = (e) => {
+        setRole(e);
+    }
+
     return (
         <div>
             <h2>권한 설정</h2>
             {isAdmin ? (
-                <div>
-                    <label>권한 부여:</label>
-                    <select value={role} onChange={(e) => setRole(e.target.value)}>
-                        <option value=''>--role 설정--</option>
-                        <option value='TYPE1'>user</option>
-                        <option value='TYPE2'>admin</option>
-                        <option value='TYPE3'>blocked</option>
-                    </select>
-                    <br/>
-                    <br/>
-                    <button onClick={submitHandler}>Submit</button>
+                <div className='user'>
+                    {/* 드롭다운 부트스트랩 코드 사용. variant = 버튼 색상 */}
+                    <Dropdown onSelect={handleSelect}>
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                            {role || "-role 설정-"}
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="TYPE1">user</Dropdown.Item>
+                            <Dropdown.Item eventKey="TYPE2">admin</Dropdown.Item>
+                            <Dropdown.Item eventKey="TYPE3">blocked</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <Button onClick={submitHandler} variant="success" type="submit">설정완료</Button>
+                    <Link to={`/user/detail/${username}`}> <Button variant="primary">취소</Button></Link>
                 </div>
             ) : (
                 <p>관리자만 접근 가능합니다.</p>

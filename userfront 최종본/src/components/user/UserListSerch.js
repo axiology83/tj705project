@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { fetchFn } from '../NetworkUtils';
 import DateRangePicker from '../DateRangePicker';
 import UserList from './UserList';
+import Button from 'react-bootstrap/Button';
 
 // 가입일로 회원 검색하기(검색 전엔 목록 안보임)
 function UserListSerch() {
@@ -58,12 +59,15 @@ function UserListSerch() {
     return (
         <>
             <div>
+                {/* DateRangePicker = 달력 띄워주는 것 */}
                 <DateRangePicker
                     ranges={[{ startDate: tempStartDate, endDate: tempEndDate, key: 'selection' }]}
                     onChange={handleDateRangeChange}
                 />
-                <button onClick={handleSearchButtonClick}>검색</button>
+                <br />
+                <Button onClick={handleSearchButtonClick} variant="primary">검색</Button>
             </div>
+            <br />
             <div>
                 <UserList startDate={startDate} endDate={endDate} users={users} setUsers={setUsers} />
             </div>

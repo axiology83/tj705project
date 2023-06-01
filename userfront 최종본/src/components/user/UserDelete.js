@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { fetchFn } from '../NetworkUtils';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function UserDelete() {
     const username = useParams().username;
@@ -75,12 +80,31 @@ function UserDelete() {
             {isAdmin || LOGINER === username ? (
                 <>
                     <h2>회원 탈퇴</h2>
-                    <form action="#" onSubmit={onSubmitHandler}>
-                        아이디 : <input value={username} readOnly />
-                        <br />
-                        비밀번호 : <input name="password" />
-                        <br />
-                        <button>삭제</button>
+                    <form onSubmit={onSubmitHandler}>
+                        <Container>
+                            {/* 폼 부트스트랩 코드 사용. 가운데 정렬. xs={12} md={6} 로 크기 조절. mb = 아래 간격 조절 */}
+                            <Row className="justify-content-md-center">
+                                <Col xs={12} md={6}>
+                                    <Form.Group className="mb-3" controlId="formUsername">
+                                        <Form.Control name='username' type="text" placeholder="아이디" value={username} disabled />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        </Container>
+
+                        <Container>
+                            <Row className="justify-content-md-center">
+                                <Col xs={12} md={6}>
+                                    <Form.Group className="mb-3" controlId="formPassword">
+                                        <Form.Control name='password' type="password" placeholder="새 비밀번호" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        </Container>
+                        
+                        <Button variant="danger" type="submit">삭제</Button>
+                        {/* 링크를 버튼 모양으로 보이게 하는 법 : 버튼을 링크로 감싸기*/}
+                        <Link to={`/user/profile/${username}`}> <Button variant="primary">취소</Button></Link>
                     </form>
                 </>
             ) : (
