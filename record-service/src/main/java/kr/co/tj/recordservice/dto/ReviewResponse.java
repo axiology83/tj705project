@@ -22,8 +22,6 @@ public class ReviewResponse implements Serializable {
 	private String buyerName; // 구매자 username
 	private String title;
 	private String content;
-	private int count;
 	private float rate;
 	private Date createDate;
-	private Date updateDate;
 }

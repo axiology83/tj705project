@@ -1,13 +1,11 @@
 package kr.co.tj.recordservice.persistance;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RecordRepository extends JpaRepository<RecordEntity, Long>{
 
-	Optional<RecordEntity> findFirstByBoardId(Long bid);
-
-	RecordEntity findById(String id);
+	Optional<RecordEntity> findFirstByBoardid(Long bid);
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.tj.recordservice.dto.BoardResponse;
 import kr.co.tj.recordservice.dto.RecordDTO;
 import kr.co.tj.recordservice.dto.RecordRequest;
-import kr.co.tj.recordservice.dto.RecordResponse;
 import kr.co.tj.recordservice.dto.ReviewResponse;
 import kr.co.tj.recordservice.service.RecordService;
+
 
 @RestController
 @RequestMapping("/record-service")
@@ -27,10 +28,11 @@ public class RecordController {
 	@Autowired
 	private RecordService recordService;
 	
-	@GetMapping("/records")
+	// 레코드 전체 get
+	@GetMapping("/records") 
 	public ResponseEntity<?> findAll(){
 		Map<String, Object> map=new HashMap<>();
-		List<RecordResponse> list = recordService.findAll();
+		List<RecordDTO> list = recordService.findAll();
 
 		if (list.isEmpty()) {
 			map.put("result","record의 list가 존재하지 않습니다.");
@@ -50,8 +52,9 @@ public class RecordController {
 		}
 	}
 	
+	// 해당하는 id를 가진 레코드만 get
 	@GetMapping("/records/{id}")
-	public ResponseEntity<?> findById(String id){
+	public ResponseEntity<?> findById(@PathVariable("id") Long id){
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO dto=recordService.findById(id);
@@ -65,15 +68,15 @@ public class RecordController {
 		
 	}
 	
-	@PostMapping("/records") // record에 직접 post
+	// record에 직접 post
+	@PostMapping("/records") 
 	public ResponseEntity<?> createRecords(@RequestBody RecordRequest recordRequest){
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(recordRequest);
 			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
-			map.put("result", recordResponse);
+			map.put("result", recordDTO);
 			
 			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {
@@ -85,16 +88,16 @@ public class RecordController {
 		}
 	}
 	
-	@PostMapping("/boards") // boardResponse를 받아와서 post // postman 입력 시 BoardResponse의 변수를 사용해야한다.
+	// boardResponse를 받아와서 post // postman 입력 시 BoardResponse의 변수를 사용해야한다.
+	@PostMapping("/boards")
 	public ResponseEntity<?> createRecords(@RequestBody BoardResponse boardResponse){
 		
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(boardResponse);
 			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
-			map.put("result", recordResponse);
+			map.put("result", recordDTO);
 			
 			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {
@@ -106,27 +109,24 @@ public class RecordController {
 		}
 	}
 	
-
-	@PostMapping("/reviews") // reviewResponse를 받아와서 post // postman 입력 시 ReviewResponse의 변수를 사용해야한다.
+	// reviewResponse를 받아와서 post // postman 입력 시 ReviewResponse의 변수를 사용해야한다.
+	@PostMapping("/reviews") 
 	public ResponseEntity<?> createRecords(@RequestBody ReviewResponse reviewResponse){
 		
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(reviewResponse);
-			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
+			
 			Long bid=reviewResponse.getBid();
-			RecordDTO boardDTOInRecordDTO=recordService.findFirstByBoardId(bid);
-			RecordDTO addRecordDTO=RecordDTO.boardRecordWithRecordDTO(boardDTOInRecordDTO);
-			recordResponse.setCateId(addRecordDTO.getCateId());
-			recordResponse.setCateName(addRecordDTO.getCateName());
-			recordResponse.setBoardTitle(addRecordDTO.getBoardTitle());
-			recordResponse.setBoardContent(addRecordDTO.getBoardContent());
-			recordResponse.setStatus(addRecordDTO.getStatus());
-			// recordResponse.setBoardCreateDate(addRecordDTO.getBoardCreateDate());
-			recordResponse.setBoardUpdateDate(addRecordDTO.getBoardUpdateDate());
-			recordResponse.setBoardCnt(addRecordDTO.getBoardCnt());
-			map.put("result", recordResponse);
+			RecordDTO boardDTOInRecordDTO=recordService.findFirstByBoardid(bid);
+	
+			recordDTO.setBoardTitle(boardDTOInRecordDTO.getBoardTitle());
+			recordDTO.setBoardContent(boardDTOInRecordDTO.getBoardContent());
+			recordDTO.setBoardCreateDate(boardDTOInRecordDTO.getBoardCreateDate());
+			
+			recordDTO=recordService.createRecord(recordDTO);
+		
+			map.put("result", recordDTO);
 			
 			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {
@@ -138,16 +138,16 @@ public class RecordController {
 		}
 	}
 	
-	@PutMapping("/records") // record에 put한 것을 create
+	// record에 put한 것을 create
+	@PutMapping("/records")
 	public ResponseEntity<?> createUpdateRecords(@RequestBody RecordRequest recordRequest){
 		
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(recordRequest);
 			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
-			map.put("result", recordResponse);
+			map.put("result", recordDTO);
 			
 			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {
@@ -159,17 +159,16 @@ public class RecordController {
 		}
 	}
 	
-	
-	@PutMapping("/boards") // board에 put한 것을 create
+	// board에 put한 것을 create
+	@PutMapping("/boards") 
 	public ResponseEntity<?> createUpdateRecords(@RequestBody BoardResponse boardResponse){
 
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(boardResponse);
 			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
 			
-			map.put("result", recordResponse);
+			map.put("result", recordDTO);
 			
 			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {
@@ -181,26 +180,24 @@ public class RecordController {
 		}
 	}
 	
-	@PutMapping("/reviews") // review에 put한 것을 create
+	// review에 put한 것을 create
+	@PutMapping("/reviews") 
 	public ResponseEntity<?> createUpdateRecords(@RequestBody ReviewResponse reviewResponse){
 		
 		Map<String, Object> map=new HashMap<>();
 		try {
 			RecordDTO recordDTO=RecordDTO.toRecordDTO(reviewResponse);
-			recordDTO=recordService.createRecord(recordDTO);
-			RecordResponse recordResponse=recordDTO.toRecordResponse();
+			
 			Long bid=reviewResponse.getBid();
-			RecordDTO boardDTOInRecordDTO=recordService.findFirstByBoardId(bid);
-			RecordDTO addRecordDTO=RecordDTO.boardRecordWithRecordDTO(boardDTOInRecordDTO);
-			recordResponse.setCateId(addRecordDTO.getCateId());
-			recordResponse.setCateName(addRecordDTO.getCateName());
-			recordResponse.setBoardTitle(addRecordDTO.getBoardTitle());
-			recordResponse.setBoardContent(addRecordDTO.getBoardContent());
-			recordResponse.setStatus(addRecordDTO.getStatus());
-			// recordResponse.setBoardCreateDate(addRecordDTO.getBoardCreateDate());
-			recordResponse.setBoardUpdateDate(addRecordDTO.getBoardUpdateDate());
-			recordResponse.setBoardCnt(addRecordDTO.getBoardCnt());
-			map.put("result", recordResponse);
+			RecordDTO boardDTOInRecordDTO=recordService.findFirstByBoardid(bid);
+
+			recordDTO.setBoardTitle(boardDTOInRecordDTO.getBoardTitle());
+			recordDTO.setBoardContent(boardDTOInRecordDTO.getBoardContent());
+			recordDTO.setBoardCreateDate(boardDTOInRecordDTO.getBoardCreateDate());
+			
+			recordDTO=recordService.createRecord(recordDTO);
+
+			map.put("result", recordDTO);
 			
 			return ResponseEntity.ok().body(map);
 		} catch (Exception e) {

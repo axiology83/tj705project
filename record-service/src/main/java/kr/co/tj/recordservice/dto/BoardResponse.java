@@ -22,7 +22,4 @@ public class BoardResponse implements Serializable {
 	private String title;
 	private String content;
 	private Date createDate;
-	private Date updateDate;
-	private Long readCnt;
-	private String cateName;
 } 
