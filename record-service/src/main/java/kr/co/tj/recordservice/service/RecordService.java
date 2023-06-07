@@ -13,4 +13,5 @@ public interface RecordService {
 
 	RecordDTO findById(Long id);
 
+	List<RecordDTO> findBySeller(String keyword);
 }

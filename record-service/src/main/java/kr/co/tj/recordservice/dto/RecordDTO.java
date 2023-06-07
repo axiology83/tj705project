@@ -20,7 +20,7 @@ public class RecordDTO implements Serializable{
 	private Long id;
 	
 	private Long boardid; // 판매글의 아이디
-	private String seller; // 판메자의 닉네임 
+	private String seller; // 판매자의 닉네임 
 	private String buyer; // 구매자의 닉네임
 	private String boardTitle;
 	private String boardContent;

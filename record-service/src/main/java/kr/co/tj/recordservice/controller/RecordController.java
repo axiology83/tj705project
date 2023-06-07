@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.tj.recordservice.dto.BoardResponse;
@@ -66,6 +67,31 @@ public class RecordController {
 			return ResponseEntity.badRequest().body(map);
 		}
 		
+	}
+	
+	@GetMapping("/records/sellerFindRecord")
+	public ResponseEntity<?> findBySeller(@RequestParam(name = "keyword") String keyword) {
+		Map<String, Object> map=new HashMap<>();
+		try {
+			if (keyword == null || keyword == "") {
+				map.put("result", "정보가 없습니다.");
+				return ResponseEntity.badRequest().body(map);
+			}
+			
+			List<RecordDTO> list = recordService.findBySeller(keyword);
+			if (list.isEmpty()) {
+				map.put("result", "리스트가 없습니다.");
+				return ResponseEntity.badRequest().body(map);
+			}
+
+			map.put("result", list);
+			return ResponseEntity.ok().body(map);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("result","record가 존재하지 않습니다.");
+			return ResponseEntity.badRequest().body(map);
+		}
 	}
 	
 	// record에 직접 post

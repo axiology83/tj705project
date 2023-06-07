@@ -52,17 +52,29 @@ public class RecordServiceImpl implements RecordService{
 	@Override
 	public List<RecordDTO> findAll() {
 		List<RecordEntity> list_entity = recordRepository.findAll();
-		List<RecordDTO> list_response = new ArrayList<>();
+		List<RecordDTO> list_dto = new ArrayList<>();
 		
 		for (RecordEntity x : list_entity) {
-			list_response.add(RecordDTO.toRecordDTO(x));
+			list_dto.add(RecordDTO.toRecordDTO(x));
 		}
-		return list_response;
+		return list_dto;
 	}
 	
 	public RecordDTO findById(Long id) {
 		Optional<RecordEntity> optional =recordRepository.findById(id);
 		RecordEntity recordEntity=optional.get();
 		return RecordDTO.toRecordDTO(recordEntity);
+	}
+	
+	@Override
+	public List<RecordDTO> findBySeller(String seller) {
+
+		List<RecordEntity> list_entity = recordRepository.findBySeller(seller);
+		List<RecordDTO> list_dto = new ArrayList<>();
+		
+		for (RecordEntity x : list_entity) {
+			list_dto.add(RecordDTO.toRecordDTO(x));
+		}
+		return list_dto;
 	}
 }

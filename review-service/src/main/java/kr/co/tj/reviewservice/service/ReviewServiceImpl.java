@@ -92,9 +92,9 @@ public class ReviewServiceImpl implements ReviewService{
 	
 	// 판매자 리뷰 목록보기
 	@Override
-	public List<ReviewResponse> findBySeller(String sellerId) {
+	public List<ReviewResponse> findBySeller(String seller) {
 
-		List<ReviewEntity> entity = reviewRepository.findBySellerId(sellerId);
+		List<ReviewEntity> entity = reviewRepository.findBySellerId(seller);
 		List<ReviewResponse> reviewResponse = new ArrayList<>();
 		
 		entity.forEach(x -> {
